@@ -53,7 +53,7 @@ pnpm check
 
 ## Add a record
 
-For a public contribution, use the **Submit an AI-math result** issue form. For a local data change:
+For a public contribution, use the **Submit an AI-math result** issue form and paste one public post or source URL. Submissions are reviewed and added manually, so publication can take some time. For a local data change:
 
 1. Add a new numbered SQL migration. Do not rewrite an already-deployed migration.
 2. Include at least one direct evidence link and a specific caveat.

@@ -4,17 +4,9 @@ Thanks for helping make AIMathBase more accurate.
 
 ## Submit a result
 
-Open the **Submit an AI-math result** issue and provide:
+Open the **Submit an AI-math result** issue and paste one public link. It can be an X post, another social post, a paper, a repository, or an announcement.
 
-- the exact mathematical claim;
-- whether it was proved, disproved, discovered, formalized, or used as a benchmark;
-- the AI system and its concrete role;
-- the human contributors and their role;
-- the strongest verification artifact;
-- the original X announcement, if one exists;
-- a caveat describing what is not established.
-
-Reports without a direct evidence link may be tracked but will not be promoted beyond `reported`.
+We analyze submissions ourselves and add suitable entries manually. This can take some time.
 
 ## Correct a record
 

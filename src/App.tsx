@@ -5,9 +5,6 @@ import {
   Check,
   ChevronRight,
   CircleAlert,
-  Code2,
-  Database,
-  Menu,
   Search,
   SlidersHorizontal,
   X,
@@ -58,7 +55,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [mobileFilters, setMobileFilters] = useState(false);
-  const [methodOpen, setMethodOpen] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -155,18 +151,14 @@ function App() {
         <a className="brand" href="#top" aria-label="AIMathBase home"><span className="brand-mark">AI</span>MathBase</a>
         <nav className="desktop-nav" aria-label="Primary navigation">
           <a href="#registry">Registry</a>
-          <button onClick={() => setMethodOpen(true)}>Method</button>
           <a href="https://github.com/muhammadsqlan/AIMathBase/issues/new?template=submit-a-result.yml" target="_blank" rel="noreferrer">Contribute</a>
-          <a href="https://github.com/muhammadsqlan/AIMathBase" target="_blank" rel="noreferrer"><Code2 size={16} /> GitHub</a>
         </nav>
-        <button className="mobile-menu" onClick={() => setMobileFilters(true)} aria-label="Open menu"><Menu size={21} /></button>
+        <a className="mobile-contribute" href="https://github.com/muhammadsqlan/AIMathBase/issues/new?template=submit-a-result.yml" target="_blank" rel="noreferrer">Contribute</a>
       </header>
 
       <main id="top">
         <section className="hero">
-          <div className="eyebrow"><Database size={15} /> A living evidence registry</div>
           <h1>What has AI actually proved in mathematics?</h1>
-          <p className="hero-copy">A source-first record of new theorems, counterexamples, formalizations, and benchmarks—with the AI role and the caveat kept attached.</p>
           <div className="search-row">
             <label className="search-box">
               <Search size={20} aria-hidden="true" />
@@ -175,11 +167,6 @@ function App() {
               {query && <button onClick={() => setQuery("")} aria-label="Clear search"><X size={16} /></button>}
             </label>
             <button className="filter-button" onClick={() => setMobileFilters(true)}><SlidersHorizontal size={17} /> Filter {activeFilterCount > 0 && <span>{activeFilterCount}</span>}</button>
-          </div>
-          <div className="corpus-note">
-            <span><strong>{records.length || "—"}</strong> reviewed records</span>
-            <span>Updated August 1, 2026</span>
-            <span>Open, versioned data</span>
           </div>
         </section>
 
@@ -218,17 +205,9 @@ function App() {
           </aside>
         </section>
 
-        <section className="principles">
-          <div><span>01</span><h3>Claims, not hype</h3><p>Every headline is narrowed to what the source actually establishes.</p></div>
-          <div><span>02</span><h3>Roles stay visible</h3><p>AI generation, human steering, and independent checking are recorded separately.</p></div>
-          <div><span>03</span><h3>Corrections welcome</h3><p>The corpus is versioned on GitHub and every record can be challenged.</p></div>
-        </section>
       </main>
 
-      <footer><span>AIMathBase · An open research index</span><span>Not a claim of completeness or mathematical priority.</span></footer>
-
       {mobileFilters && <div className="mobile-overlay" role="dialog" aria-modal="true" aria-label="Registry filters"><button className="overlay-dismiss" onClick={() => setMobileFilters(false)} aria-label="Close filters" /><div className="mobile-filter-sheet">{filters}<button className="apply-button" onClick={() => setMobileFilters(false)}>Show {filtered.length} results</button></div></div>}
-      {methodOpen && <MethodDialog onClose={() => setMethodOpen(false)} />}
     </div>
   );
 }
@@ -258,22 +237,6 @@ function RecordDetail({ record, onClose }: { record: MathRecord; onClose: () => 
       <section className="role-block"><h3>What people did</h3><p>{record.humanRole}</p></section>
       <section className="caveat"><CircleAlert size={17} /><div><h3>Scope note</h3><p>{record.caveat}</p></div></section>
       <section className="sources"><h3>Original evidence</h3>{record.sources.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><span><small>{source.kind.replace("-", " ")}</small>{source.title}</span><ArrowUpRight size={16} /></a>)}</section>
-    </div>
-  );
-}
-
-function MethodDialog({ onClose }: { onClose: () => void }) {
-  return (
-    <div className="modal-layer" role="dialog" aria-modal="true" aria-labelledby="method-title">
-      <button className="overlay-dismiss" onClick={onClose} aria-label="Close method" />
-      <article className="method-dialog">
-        <div className="detail-topline"><span>Methodology 1.0</span><button className="icon-button" onClick={onClose} aria-label="Close method"><X size={18} /></button></div>
-        <h2 id="method-title">A registry of evidence, not a leaderboard.</h2>
-        <p>We include a result when a public source identifies a mathematical claim, an AI contribution, and a checkable evidence trail. We separate five things that are too often blurred together:</p>
-        <ol><li><strong>Outcome:</strong> proof, disproof, algorithmic discovery, formalization, or benchmark.</li><li><strong>Novelty:</strong> new result, human–AI collaboration, rediscovery, formalization, or capability only.</li><li><strong>Roles:</strong> what the system generated and what humans supplied or repaired.</li><li><strong>Verification:</strong> formal kernel check, publication, expert check, or unverified report.</li><li><strong>Scope:</strong> the strongest claim the evidence supports—and the nearby claim it does not.</li></ol>
-        <p>The initial corpus was independently checked against primary papers, formal repositories, author announcements, project pages, and the community-maintained Erdős Problems AI ledger. It is intentionally incomplete and designed to improve in public.</p>
-        <a className="method-cta" href="https://github.com/muhammadsqlan/AIMathBase/issues/new?template=submit-a-result.yml" target="_blank" rel="noreferrer">Submit or correct a record <ArrowUpRight size={16} /></a>
-      </article>
     </div>
   );
 }
