@@ -1,0 +1,30 @@
+name: Correct a registry record
+description: Report an error, missing caveat, prior result, or broken source.
+title: "[Correction]: "
+labels: ["correction", "needs-review"]
+body:
+  - type: input
+    id: record
+    attributes:
+      label: Record slug or URL
+    validations:
+      required: true
+  - type: dropdown
+    id: field
+    attributes:
+      label: What needs correction?
+      options: [Mathematical claim, Novelty or priority, Verification, AI role, Human role, Date, Source link, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Proposed correction
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Supporting source URL
+    validations:
+      required: true

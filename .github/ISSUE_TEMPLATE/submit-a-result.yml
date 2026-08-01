@@ -1,0 +1,68 @@
+name: Submit an AI-math result
+description: Propose a new proof, disproof, discovery, formalization, or benchmark.
+title: "[Result]: "
+labels: ["submission", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for contributing. Direct evidence and a precise scope note are required.
+  - type: input
+    id: title
+    attributes:
+      label: Result title
+      placeholder: The narrow mathematical claim
+    validations:
+      required: true
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options: [Proved, Disproved, Discovered, Formalized, Benchmark]
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: Exact claim
+      description: State what changed mathematically and what remains open.
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: AI system
+    validations:
+      required: true
+  - type: textarea
+    id: roles
+    attributes:
+      label: AI and human roles
+      description: Separately describe what the system generated and what people supplied, checked, repaired, or proved.
+    validations:
+      required: true
+  - type: input
+    id: evidence
+    attributes:
+      label: Strongest evidence URL
+      placeholder: Paper, formal repository, or expert report
+    validations:
+      required: true
+  - type: input
+    id: announcement
+    attributes:
+      label: Original announcement URL
+      description: Include the original X post when available.
+  - type: textarea
+    id: caveat
+    attributes:
+      label: Scope caveat
+      description: What nearby or stronger claim is not established?
+    validations:
+      required: true
+  - type: checkboxes
+    id: declaration
+    attributes:
+      label: Source check
+      options:
+        - label: I opened the linked evidence and did not rely only on a repost or screenshot.
+          required: true
