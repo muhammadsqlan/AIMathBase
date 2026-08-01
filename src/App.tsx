@@ -150,7 +150,7 @@ function App() {
       <header className="topbar">
         <a className="brand" href="#top" aria-label="AIMathBase home"><span className="brand-mark">AI</span>MathBase</a>
         <nav className="desktop-nav" aria-label="Primary navigation">
-          <a href="#registry">Registry</a>
+          <a href="#top">Home</a>
           <a href="https://github.com/muhammadsqlan/AIMathBase/issues/new?template=submit-a-result.yml" target="_blank" rel="noreferrer">Contribute</a>
         </nav>
         <a className="mobile-contribute" href="https://github.com/muhammadsqlan/AIMathBase/issues/new?template=submit-a-result.yml" target="_blank" rel="noreferrer">Contribute</a>
