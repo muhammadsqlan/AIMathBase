@@ -1,10 +1,10 @@
 # Contributing
 
-Thanks for helping make AIMathBase more accurate.
+Thanks for helping make Science Board and its Mathematics board more accurate.
 
 ## Submit a result
 
-Open the **Submit an AI-math result** issue and paste one public link. It can be an X post, another social post, a paper, a repository, or an announcement.
+Open the submission issue and provide direct public sources. For Mathematics, this can be an original announcement, paper, formal-proof repository, project page, or canonical problem entry. For other sciences, prefer the paper or primary scientific artifact plus an independent validation source when one exists.
 
 We analyze submissions ourselves and add suitable entries manually. This can take some time.
 
@@ -14,7 +14,7 @@ Open the **Correct a registry record** issue with the record slug, the disputed 
 
 ## Pull requests
 
-Database changes must use a new numbered migration. Run:
+Mathematics database changes must use a new numbered migration. Cross-science changes must update the inspectable research ledger and regenerate the public registry artifact from the same reviewed rows. Run:
 
 ```bash
 pnpm install
@@ -22,4 +22,4 @@ pnpm db:migrate:local
 pnpm check
 ```
 
-Keep summaries factual and compact. Avoid promotional language, model leaderboard claims, and unsupported “first ever” wording.
+Keep summaries factual and compact. Separate the AI contribution from human scientific work, retain validation limits, and keep a specific caveat on every record. Avoid promotional language, model leaderboard claims, and unsupported “first ever” wording.

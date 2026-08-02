@@ -1,0 +1,1364 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "AI-enabled scientific discoveries: audited seed census",
+    "description": "A provenance-first cross-science ledger through 2 August 2026, separating observed or experimentally supported findings from candidate atlases, rediscoveries, validations, and capability demonstrations.",
+    "generatedAt": "2026-08-02T07:21:56+05:00",
+    "cards": [
+      {
+        "id": "reviewed_cases_card",
+        "description": "Study-level cases that passed the strict inclusion rule; rows are not comparable discovery units.",
+        "dataset": "summary",
+        "sourceId": "summary_source",
+        "metrics": [
+          {
+            "label": "Reviewed cases",
+            "field": "reviewed_cases",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "discipline_groups_card",
+        "description": "Broad discipline groups represented by at least one included case.",
+        "dataset": "summary",
+        "sourceId": "summary_source",
+        "metrics": [
+          {
+            "label": "Discipline groups",
+            "field": "discipline_groups",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "tier_a_card",
+        "description": "Cases with direct observational, field, laboratory, animal, human-study, or manual-reconstruction corroboration.",
+        "dataset": "summary",
+        "sourceId": "summary_source",
+        "metrics": [
+          {
+            "label": "Tier A cases",
+            "field": "tier_a_cases",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "tier_b_card",
+        "description": "Published computational or statistical cases with partial, targeted, or expert validation.",
+        "dataset": "summary",
+        "sourceId": "summary_source",
+        "metrics": [
+          {
+            "label": "Tier B cases",
+            "field": "tier_b_cases",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "cases_by_discipline_chart",
+        "title": "Included cases by discipline",
+        "subtitle": "Reviewed study-level cases through 2 Aug 2026; this measures audit coverage, not comparable scientific output",
+        "intent": "comparison",
+        "question": "Which discipline groups are represented in this reviewed seed catalog?",
+        "rationale": "A sorted horizontal bar chart makes the long discipline labels readable and exposes the seed audit's biomedical concentration without treating heterogeneous object counts as comparable.",
+        "comparisonContext": {
+          "baseline": "Zero included cases",
+          "denominator": "25 reviewed study-level cases",
+          "grain": "Broad discipline group",
+          "normalization": "Unweighted case count",
+          "semanticFamily": "Audit coverage",
+          "unit": "cases"
+        },
+        "type": "horizontalBar",
+        "dataset": "discipline_summary",
+        "sourceId": "discipline_summary_source",
+        "encodings": {
+          "x": {
+            "field": "discipline",
+            "type": "nominal",
+            "aggregate": "none",
+            "label": "Discipline"
+          },
+          "y": {
+            "field": "included_cases",
+            "type": "quantitative",
+            "aggregate": "none",
+            "format": "number",
+            "label": "Included cases",
+            "unit": "cases"
+          },
+          "tooltip": [
+            {
+              "field": "tier_a_cases",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Tier A"
+            },
+            {
+              "field": "tier_b_cases",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Tier B"
+            },
+            {
+              "field": "catalog_share_pct",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "Catalog share"
+            },
+            {
+              "field": "earliest_year",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Earliest year"
+            },
+            {
+              "field": "latest_year",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Latest year"
+            }
+          ]
+        },
+        "valueFormat": "number",
+        "unit": "cases",
+        "layout": "full",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "maxRows": 8,
+        "compatibleTypes": [
+          "horizontalBar",
+          "bar",
+          "leaderboard"
+        ],
+        "settings": {
+          "orientation": "horizontal",
+          "sort": "descending",
+          "showValues": true,
+          "categoryLabelPolicy": "wrap"
+        },
+        "surface": {
+          "surface": "card",
+          "compact": false,
+          "interactiveLegend": false,
+          "showControls": true,
+          "viewMode": "both"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "discoveries_table",
+        "title": "Included discovery cases",
+        "subtitle": "Exact claim, AI role, human role, evidence stage, source, and limiting caveat",
+        "dataset": "discoveries",
+        "defaultSort": {
+          "field": "publication_year",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "sourceId": "discoveries_source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "publication_year",
+            "label": "Year",
+            "format": "number"
+          },
+          {
+            "field": "discipline",
+            "label": "Discipline"
+          },
+          {
+            "field": "title",
+            "label": "Finding"
+          },
+          {
+            "field": "validation_tier",
+            "label": "Tier"
+          },
+          {
+            "field": "evidence_stage",
+            "label": "Evidence"
+          },
+          {
+            "field": "reported_result",
+            "label": "What the source reports"
+          },
+          {
+            "field": "ai_role",
+            "label": "AI role"
+          },
+          {
+            "field": "human_role",
+            "label": "Human role"
+          },
+          {
+            "field": "caveat",
+            "label": "Boundary"
+          },
+          {
+            "field": "primary_source_url",
+            "label": "Primary source"
+          }
+        ]
+      },
+      {
+        "id": "exclusions_table",
+        "title": "Important adjacent claims not counted",
+        "subtitle": "Validation, prediction, rediscovery, disputed novelty, capability, and definition boundaries",
+        "dataset": "exclusions",
+        "defaultSort": {
+          "field": "year",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "sourceId": "exclusions_source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "year",
+            "label": "Year"
+          },
+          {
+            "field": "area",
+            "label": "Area"
+          },
+          {
+            "field": "claim_or_system",
+            "label": "Claim or system"
+          },
+          {
+            "field": "classification",
+            "label": "Classification"
+          },
+          {
+            "field": "why_not_counted_as_a_strict_discovery",
+            "label": "Why it is outside the strict count"
+          },
+          {
+            "field": "revisit_condition",
+            "label": "Revisit when"
+          },
+          {
+            "field": "source_url",
+            "label": "Source"
+          }
+        ]
+      },
+      {
+        "id": "coverage_table",
+        "title": "Coverage ledger and open gaps",
+        "subtitle": "Zero means not yet included in this sweep, not proof that a discipline has no qualifying cases",
+        "dataset": "coverage",
+        "defaultSort": {
+          "field": "included_cases",
+          "direction": "desc"
+        },
+        "density": "spacious",
+        "sourceId": "coverage_source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "discipline",
+            "label": "Discipline"
+          },
+          {
+            "field": "included_cases",
+            "label": "Cases",
+            "format": "number"
+          },
+          {
+            "field": "review_status",
+            "label": "Review status"
+          },
+          {
+            "field": "what_was_covered",
+            "label": "Covered"
+          },
+          {
+            "field": "main_gap_or_next_search",
+            "label": "Next search"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "summary_source",
+        "label": "Discovery-ledger summary query",
+        "path": "discoveries.csv",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "id": "discovery-summary-2026-08-02",
+          "sql": "SELECT COUNT(*) AS reviewed_cases, COUNT(DISTINCT discipline) AS discipline_groups, SUM(CASE WHEN validation_tier = 'A' THEN 1 ELSE 0 END) AS tier_a_cases, SUM(CASE WHEN validation_tier = 'B' THEN 1 ELSE 0 END) AS tier_b_cases, '2026-08-02' AS cut_off_date FROM discoveries;",
+          "description": "Reconciles the included row count, represented disciplines, and validation tiers.",
+          "executed_at": "2026-08-02T07:21:56+05:00",
+          "filters": [
+            "Input table discoveries is imported from discoveries.csv with its header row",
+            "Cut-off date: 2026-08-02",
+            "One row per reviewed study-level case"
+          ],
+          "metric_definitions": [
+            "reviewed_cases = count of included rows; it is not a count of comparable scientific objects",
+            "discipline_groups = distinct broad discipline labels among included rows",
+            "Tier A = case-appropriate empirical or observational corroboration; it does not imply replication, approval, or settled truth",
+            "Tier B = published computational or statistical result with partial validation; most reported entities remain unverified individually"
+          ],
+          "tables_used": [
+            "discoveries.csv imported as discoveries"
+          ]
+        }
+      },
+      {
+        "id": "discipline_summary_source",
+        "label": "Cases-by-discipline query",
+        "path": "discoveries.csv",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "id": "discipline-coverage-2026-08-02",
+          "sql": "SELECT discipline, COUNT(*) AS included_cases, SUM(CASE WHEN validation_tier = 'A' THEN 1 ELSE 0 END) AS tier_a_cases, SUM(CASE WHEN validation_tier = 'B' THEN 1 ELSE 0 END) AS tier_b_cases, MIN(CAST(publication_year AS INTEGER)) AS earliest_year, MAX(CAST(publication_year AS INTEGER)) AS latest_year, ROUND(100.0 * COUNT(*) / (SELECT COUNT(*) FROM discoveries), 1) AS catalog_share_pct FROM discoveries GROUP BY discipline ORDER BY included_cases DESC, discipline ASC;",
+          "description": "Aggregates reviewed cases by broad discipline while retaining tier, year-range, and catalog-share context.",
+          "executed_at": "2026-08-02T07:21:56+05:00",
+          "filters": [
+            "Input table discoveries is imported from discoveries.csv with its header row",
+            "Cut-off date: 2026-08-02",
+            "Unweighted count of study-level cases"
+          ],
+          "metric_definitions": [
+            "included_cases = included ledger rows in the discipline",
+            "catalog_share_pct = discipline rows divided by all included rows; it measures this audit's composition, not scientific productivity"
+          ],
+          "tables_used": [
+            "discoveries.csv imported as discoveries"
+          ]
+        }
+      },
+      {
+        "id": "discoveries_source",
+        "label": "Reviewed AI-enabled scientific discovery ledger",
+        "path": "discoveries.csv",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "id": "discovery-detail-2026-08-02",
+          "sql": "SELECT id, CAST(publication_year AS INTEGER) AS publication_year, discipline, field, title, discovery_class, ai_role, human_role, evidence_stage, validation_tier, novelty_scope, reported_result, primary_source_url, supporting_source_url, caveat FROM discoveries ORDER BY publication_year DESC, id ASC;",
+          "description": "Study-level cases meeting the five-part inclusion rule, with primary links and explicit evidence boundaries.",
+          "executed_at": "2026-08-02T07:21:56+05:00",
+          "filters": [
+            "Cut-off date: 2026-08-02",
+            "One row per reviewed study-level case, not per discovered object",
+            "Requires a material AI role, a specific scientific novelty claim, and inspectable primary or authoritative evidence",
+            "Predictions without corroboration, rediscoveries, validation-only cases, and capability demonstrations are excluded from the strict ledger"
+          ],
+          "metric_definitions": [
+            "reviewed_cases = count of included rows; it is not a count of comparable scientific objects",
+            "Tier A = case-appropriate empirical or observational corroboration; it does not imply replication, approval, or settled truth",
+            "Tier B = published computational or statistical result with partial validation; most reported entities remain unverified individually"
+          ],
+          "tables_used": [
+            "discoveries.csv"
+          ]
+        }
+      },
+      {
+        "id": "exclusions_source",
+        "label": "Adjacent and excluded claims ledger",
+        "path": "exclusions.csv",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "id": "exclusion-detail-2026-08-02",
+          "sql": "SELECT id, year, area, claim_or_system, classification, why_not_counted_as_a_strict_discovery, source_url, revisit_condition FROM exclusions ORDER BY year DESC, id ASC;",
+          "description": "Influential claims kept outside the strict discovery count because they are validation-only, predictive, rediscovered, contested, or capability demonstrations.",
+          "executed_at": "2026-08-02T07:21:56+05:00",
+          "filters": [
+            "Reviewed through 2026-08-02",
+            "Exclusion is methodological and may be revisited when evidence changes"
+          ],
+          "tables_used": [
+            "exclusions.csv"
+          ]
+        }
+      },
+      {
+        "id": "coverage_source",
+        "label": "Discipline coverage ledger",
+        "path": "coverage_ledger.csv",
+        "query": {
+          "engine": "sqlite",
+          "language": "sql",
+          "id": "coverage-detail-2026-08-02",
+          "sql": "SELECT discipline, CAST(included_cases AS INTEGER) AS included_cases, review_status, what_was_covered, main_gap_or_next_search FROM coverage ORDER BY included_cases DESC, discipline ASC;",
+          "description": "Coverage status and known gaps for this first cross-science sweep.",
+          "executed_at": "2026-08-02T07:21:56+05:00",
+          "filters": [
+            "Included-case counts reconcile to discoveries.csv",
+            "Zero means no strict case was added in this sweep, not proof that none exists"
+          ],
+          "tables_used": [
+            "coverage_ledger.csv"
+          ]
+        }
+      },
+      {
+        "id": "methodology_source",
+        "label": "Audit methodology",
+        "path": "METHODOLOGY.md",
+        "query": {
+          "engine": "document",
+          "language": "markdown",
+          "description": "Definitions, inclusion rule, validation tiers, source procedure, limitations, and requirements for a living registry.",
+          "executed_at": "2026-08-02T07:21:56+05:00",
+          "tables_used": [
+            "METHODOLOGY.md"
+          ]
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title_block",
+        "type": "markdown",
+        "body": "# AI-enabled scientific discoveries: audited seed census"
+      },
+      {
+        "id": "scope_block",
+        "type": "markdown",
+        "body": "**Evidence cut-off: 2 August 2026.** This is a high-confidence, cross-science seed catalog—not a claim to have found every AI-enabled discovery ever made. No exhaustive global index exists, and the meaning of both *AI* and *discovery* varies by field.",
+        "sourceId": "methodology_source"
+      },
+      {
+        "id": "executive_summary_block",
+        "type": "markdown",
+        "body": "## Executive summary\n\nThe audit found **25 source-backed study-level cases across eight discipline groups**. Twenty-two have case-appropriate empirical or observational corroboration (Tier A); three are published computational or statistical results with partial validation (Tier B). The strongest pattern is not autonomous science: in nearly every case, AI searched or generated at scale while researchers framed the problem, ran instruments or experiments, verified candidates, and interpreted the result.",
+        "sourceId": "summary_source"
+      },
+      {
+        "id": "metric_strip_block",
+        "type": "metric-strip",
+        "cardIds": [
+          "reviewed_cases_card",
+          "discipline_groups_card",
+          "tier_a_card",
+          "tier_b_card"
+        ]
+      },
+      {
+        "id": "findings_heading_block",
+        "type": "markdown",
+        "body": "## What the evidence supports"
+      },
+      {
+        "id": "findings_block",
+        "type": "markdown",
+        "body": "- **AI has contributed to genuine discoveries**, including planets and radio bursts, field-verified geoglyphs, a new fossil species, hidden earthquake populations, experimentally tested materials and drug candidates, and new biological or neural patterns.\n- **Evidence stage matters more than the word ‘discovered’.** A field-verified geoglyph, a mouse-tested antibiotic, a phase 2a drug candidate, and a predicted stable crystal do not carry the same evidential weight.\n- **Large headline totals are usually candidate or mapping counts.** The ledger does not add 109,956 craters, 381,000 predicted crystals, and one clinical candidate into a meaningless grand total.\n- **Human–AI attribution is inseparable.** Even the most autonomous workflow here relied on human-built instruments, datasets, objectives, safeguards, and later scientific interpretation.\n- **Biomedical science dominates this seed audit (11 of 25 cases).** That reflects both a dense experimental literature and this first-pass search, not proof that AI is scientifically more productive there than everywhere else.",
+        "sourceId": "discoveries_source"
+      },
+      {
+        "id": "coverage_chart_block",
+        "type": "chart",
+        "chartId": "cases_by_discipline_chart"
+      },
+      {
+        "id": "case_detail_heading_block",
+        "type": "markdown",
+        "body": "## The reviewed cases\n\nUse the exact result and caveat columns together. Tier A means direct corroboration appropriate to the case; it does not mean clinical approval, independent replication, or final scientific truth.",
+        "sourceId": "methodology_source"
+      },
+      {
+        "id": "discoveries_table_block",
+        "type": "table",
+        "tableId": "discoveries_table"
+      },
+      {
+        "id": "selected_sources_block",
+        "type": "markdown",
+        "body": "## Selected primary evidence\n\n- [Kepler neural-network planet search](https://science.nasa.gov/universe/exoplanets/discovery-of-eight-planets-makes-alien-system-the-first-to-tie-with-our-solar-system/)\n- [AI-accelerated Nazca survey](https://doi.org/10.1073/pnas.2407652121)\n- [Oldest sepioid found through zero-shot fossil mining](https://www.nature.com/articles/s42003-026-09519-9)\n- [GNoME material-stability atlas](https://www.nature.com/articles/s41586-023-06735-9)\n- [Generative de novo antibiotics](https://doi.org/10.1016/j.cell.2025.07.033)\n- [Co-Scientist biomedical validations](https://www.nature.com/articles/s41586-026-10644-y)\n- [East Antarctic upper-mantle earthquakes](https://doi.org/10.1126/science.aea9895)\n- [Sperm-whale coda structure](https://www.nature.com/articles/s41467-024-47221-8)"
+      },
+      {
+        "id": "exclusions_heading_block",
+        "type": "markdown",
+        "body": "## What was deliberately not counted\n\nA credible registry needs a visible negative space. These influential examples are useful, but treating all of them as first discoveries would collapse the distinction between prediction, validation, rediscovery, capability, and empirical novelty.",
+        "sourceId": "methodology_source"
+      },
+      {
+        "id": "exclusions_table_block",
+        "type": "table",
+        "tableId": "exclusions_table"
+      },
+      {
+        "id": "coverage_heading_block",
+        "type": "markdown",
+        "body": "## Coverage is incomplete by design\n\nThis first sweep is strongest in biomedicine and remains incomplete in physics, climate and ocean science, botany, agriculture, and several biological subfields. A zero below records an audit gap—not an assertion that no discovery exists.",
+        "sourceId": "coverage_source"
+      },
+      {
+        "id": "coverage_table_block",
+        "type": "table",
+        "tableId": "coverage_table"
+      },
+      {
+        "id": "recommendations_block",
+        "type": "markdown",
+        "body": "## Recommended registry design\n\n1. Add a domain-neutral science schema in a new migration; do not rewrite the mathematics history.\n2. Make evidence stage, validation tier, novelty class, AI role, human role, source date, and caveat first-class fields.\n3. Keep separate views for first discovery, human–AI co-discovery, rediscovery, validation, prediction, and capability demonstration.\n4. Require a primary source and retain corrections, replications, retractions, and priority disputes as versioned updates.\n5. Publish the coverage ledger beside the catalog so ‘all’ is always an auditable goal rather than a marketing claim.",
+        "sourceId": "methodology_source"
+      },
+      {
+        "id": "questions_block",
+        "type": "markdown",
+        "body": "## Questions before product integration\n\n- Should the registry include theoretical and computational discoveries before physical validation?\n- Should social and behavioural sciences be in scope, or should the first expansion stay with natural science and archaeology?\n- Which fields require a subject-matter reviewer before publication?\n- What update cadence and correction policy will keep 2026-era claims current?",
+        "sourceId": "methodology_source"
+      },
+      {
+        "id": "caveats_block",
+        "type": "markdown",
+        "body": "## Required caveat\n\n**Share with caveats.** This is a source-backed starting census, not a systematic review or a proof of completeness. Publication bias, terminology drift, heterogeneous evidence, contested novelty, and future corrections remain material. Counts describe reviewed cases only and must not be presented as the total scientific output of AI.",
+        "sourceId": "methodology_source"
+      },
+      {
+        "id": "method_block",
+        "type": "markdown",
+        "body": "## Method and files\n\nThe full definitions, source procedure, tier rules, limitations, chart contract, and expansion requirements are in `METHODOLOGY.md`. The portable report is generated from the same bounded datasets in `artifact.json`; `discoveries.csv`, `exclusions.csv`, and `coverage_ledger.csv` remain the inspectable ledgers.",
+        "sourceId": "methodology_source"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-02T07:21:56+05:00",
+    "status": "ready",
+    "datasets": {
+      "summary": [
+        {
+          "reviewed_cases": 25,
+          "discipline_groups": 8,
+          "tier_a_cases": 22,
+          "tier_b_cases": 3,
+          "cut_off_date": "2026-08-02"
+        }
+      ],
+      "discipline_summary": [
+        {
+          "discipline": "Biomedical science",
+          "included_cases": 11,
+          "tier_a_cases": 11,
+          "tier_b_cases": 0,
+          "earliest_year": 2020,
+          "latest_year": 2026,
+          "catalog_share_pct": 44
+        },
+        {
+          "discipline": "Astronomy",
+          "included_cases": 3,
+          "tier_a_cases": 3,
+          "tier_b_cases": 0,
+          "earliest_year": 2017,
+          "latest_year": 2024,
+          "catalog_share_pct": 12
+        },
+        {
+          "discipline": "Materials and chemistry",
+          "included_cases": 3,
+          "tier_a_cases": 2,
+          "tier_b_cases": 1,
+          "earliest_year": 2020,
+          "latest_year": 2025,
+          "catalog_share_pct": 12
+        },
+        {
+          "discipline": "Archaeology and paleontology",
+          "included_cases": 2,
+          "tier_a_cases": 2,
+          "tier_b_cases": 0,
+          "earliest_year": 2024,
+          "latest_year": 2026,
+          "catalog_share_pct": 8
+        },
+        {
+          "discipline": "Neuroscience",
+          "included_cases": 2,
+          "tier_a_cases": 2,
+          "tier_b_cases": 0,
+          "earliest_year": 2024,
+          "latest_year": 2025,
+          "catalog_share_pct": 8
+        },
+        {
+          "discipline": "Planetary and Earth science",
+          "included_cases": 2,
+          "tier_a_cases": 1,
+          "tier_b_cases": 1,
+          "earliest_year": 2020,
+          "latest_year": 2026,
+          "catalog_share_pct": 8
+        },
+        {
+          "discipline": "Ecology and animal behaviour",
+          "included_cases": 1,
+          "tier_a_cases": 1,
+          "tier_b_cases": 0,
+          "earliest_year": 2024,
+          "latest_year": 2024,
+          "catalog_share_pct": 4
+        },
+        {
+          "discipline": "Genomics and virology",
+          "included_cases": 1,
+          "tier_a_cases": 0,
+          "tier_b_cases": 1,
+          "earliest_year": 2024,
+          "latest_year": 2024,
+          "catalog_share_pct": 4
+        }
+      ],
+      "discoveries": [
+        {
+          "id": "AST-2017-001",
+          "publication_year": 2017,
+          "discipline": "Astronomy",
+          "field": "Exoplanets",
+          "title": "Kepler-90i and Kepler-80g",
+          "discovery_class": "observational object discovery",
+          "ai_role": "A neural network ranked weak transit-like signals in archival Kepler data.",
+          "human_role": "Researchers selected training data, inspected the signals, and performed astronomical and statistical validation.",
+          "evidence_stage": "observed and statistically validated",
+          "validation_tier": "A",
+          "novelty_scope": "previously missed celestial objects",
+          "reported_result": "Two previously missed planets were found; Kepler-90 became the first known eight-planet system outside the Solar System.",
+          "primary_source_url": "https://science.nasa.gov/universe/exoplanets/discovery-of-eight-planets-makes-alien-system-the-first-to-tie-with-our-solar-system/",
+          "supporting_source_url": "https://doi.org/10.3847/1538-3881/aa9bea",
+          "caveat": "The AI did not observe the sky autonomously; it re-analysed archival signals and the discovery still depended on human validation."
+        },
+        {
+          "id": "AST-2018-002",
+          "publication_year": 2018,
+          "discipline": "Astronomy",
+          "field": "Radio astronomy",
+          "title": "Seventy-two additional bursts from FRB 121102",
+          "discovery_class": "signal discovery",
+          "ai_role": "A convolutional neural network searched a five-hour radio dataset for burst morphology.",
+          "human_role": "Researchers dedispersed and inspected the returned events and interpreted the burst timing.",
+          "evidence_stage": "observed signals verified in archival telescope data",
+          "validation_tier": "A",
+          "novelty_scope": "new events from a known source",
+          "reported_result": "The model recovered 72 bursts missed by the conventional search, raising the dataset total from 21 to 93.",
+          "primary_source_url": "https://doi.org/10.3847/1538-4357/aadf31",
+          "supporting_source_url": "https://arxiv.org/abs/1809.03043",
+          "caveat": "This was archival re-analysis of a known repeating fast-radio-burst source, not discovery of a new source."
+        },
+        {
+          "id": "AST-2024-003",
+          "publication_year": 2024,
+          "discipline": "Astronomy",
+          "field": "Time-domain astronomy",
+          "title": "SN 2023tyk end-to-end autonomous transient discovery workflow",
+          "discovery_class": "workflow-enabled object discovery",
+          "ai_role": "BTSbot classified a transient candidate, triggered robotic spectroscopy, classified the spectrum, and submitted the result without human intervention.",
+          "human_role": "Humans designed the pipeline, operated the surveys and instruments, and audited the resulting record.",
+          "evidence_stage": "observed, spectroscopically classified, and publicly reported",
+          "validation_tier": "A",
+          "novelty_scope": "new astronomical transient plus autonomous workflow milestone",
+          "reported_result": "SN 2023tyk was the first reported transient to complete the discovery-to-classification-to-public-report chain without human action.",
+          "primary_source_url": "https://arxiv.org/abs/2401.15167",
+          "supporting_source_url": "https://www.wis-tns.org/astronotes/astronote/2023-265",
+          "caveat": "The scientific object was detected by survey infrastructure; the novelty is the AI-orchestrated end-to-end workflow, not autonomous physical interpretation."
+        },
+        {
+          "id": "EAR-2020-004",
+          "publication_year": 2020,
+          "discipline": "Planetary and Earth science",
+          "field": "Lunar geomorphology",
+          "title": "109,956 previously unrecognized lunar craters",
+          "discovery_class": "large-scale feature discovery",
+          "ai_role": "A transfer-learning system detected craters and estimated geologic ages from Chang'E imagery and elevation data.",
+          "human_role": "Researchers curated training data, assessed error and recovery rates, and interpreted crater chronology.",
+          "evidence_stage": "peer-reviewed computational mapping with benchmark validation",
+          "validation_tier": "B",
+          "novelty_scope": "previously uncatalogued planetary surface features",
+          "reported_result": "The study reported 109,956 new craters and estimated formation systems for 18,996 craters larger than 8 km.",
+          "primary_source_url": "https://www.nature.com/articles/s41467-020-20215-y",
+          "supporting_source_url": "https://doi.org/10.1038/s41467-020-20215-y",
+          "caveat": "Most entries are model-detected map features rather than individually field-verified objects; age assignments are model estimates."
+        },
+        {
+          "id": "EAR-2026-005",
+          "publication_year": 2026,
+          "discipline": "Planetary and Earth science",
+          "field": "Seismology",
+          "title": "Upper-mantle earthquakes beneath East Antarctica",
+          "discovery_class": "hidden-event and geophysical-process discovery",
+          "ai_role": "Deep learning with transfer learning detected small seismic events across 49 stations.",
+          "human_role": "Researchers visually checked waveforms, located events, and interpreted the tectonic mechanism.",
+          "evidence_stage": "observational catalog with manual waveform checks",
+          "validation_tier": "A",
+          "novelty_scope": "previously unknown earthquake population and process evidence",
+          "reported_result": "The catalog contained 1,068 events beneath David Glacier, including 510 intermediate-depth earthquakes at roughly 100-150 km, revealing unexpected intraplate seismicity.",
+          "primary_source_url": "https://doi.org/10.1126/science.aea9895",
+          "supporting_source_url": "https://geo.ua.edu/wp-content/uploads/2012/11/Ho_etal_Science_2026.pdf",
+          "caveat": "The physical interpretation remains a scientific inference from the newly detected catalog, not a direct measurement of mantle mechanism."
+        },
+        {
+          "id": "ARC-2024-006",
+          "publication_year": 2024,
+          "discipline": "Archaeology and paleontology",
+          "field": "Archaeology",
+          "title": "303 new figurative Nazca geoglyphs",
+          "discovery_class": "field-verified object discovery",
+          "ai_role": "A deep-learning model prioritized likely geoglyph locations in aerial imagery.",
+          "human_role": "Archaeologists inspected candidates on the ground and interpreted style, distribution, and use.",
+          "evidence_stage": "field verified",
+          "validation_tier": "A",
+          "novelty_scope": "previously undocumented archaeological objects",
+          "reported_result": "An AI-accelerated six-month survey found 303 new figurative relief-type geoglyphs, nearly doubling the known count of that class and increasing the discovery rate about sixteen-fold.",
+          "primary_source_url": "https://doi.org/10.1073/pnas.2407652121",
+          "supporting_source_url": "https://elib.dlr.de/206765/1/sakai-et-al-2024-ai-accelerated-nazca-survey-nearly-doubles-the-number-of-known-figurative-geoglyphs-and-sheds-light-on.pdf",
+          "caveat": "AI prioritized survey targets; humans made the archaeological confirmation and interpretation."
+        },
+        {
+          "id": "PAL-2026-007",
+          "publication_year": 2026,
+          "discipline": "Archaeology and paleontology",
+          "field": "Paleontology",
+          "title": "Uluciala rotundata, the oldest known sepioid",
+          "discovery_class": "new species and evolutionary evidence",
+          "ai_role": "A zero-shot segmentation model isolated fossils from full-colour grinding-tomography image stacks without taxon-specific training.",
+          "human_role": "Paleontologists reconstructed, described, deposited, and taxonomically interpreted the fossils.",
+          "evidence_stage": "physical specimens, peer-reviewed taxonomy, and open 3D models",
+          "validation_tier": "A",
+          "novelty_scope": "new genus and species plus earliest fossil record",
+          "reported_result": "Two approximately 74-67 million-year-old beaks defined Uluciala rotundata and provided intermediate morphology between cuttlefish and bobtail squid lineages.",
+          "primary_source_url": "https://www.nature.com/articles/s42003-026-09519-9",
+          "supporting_source_url": "https://doi.org/10.1038/s42003-026-09519-9",
+          "caveat": "The AI segmented candidate fossils; the species diagnosis and evolutionary conclusion were human scientific work."
+        },
+        {
+          "id": "MAT-2020-008",
+          "publication_year": 2020,
+          "discipline": "Materials and chemistry",
+          "field": "Photocatalysis",
+          "title": "Sixfold-improved photocatalyst formulation found by a mobile robotic chemist",
+          "discovery_class": "closed-loop experimental discovery",
+          "ai_role": "Bayesian search selected experiments for a mobile robot across a ten-variable formulation space.",
+          "human_role": "Chemists defined the objective, reagents and apparatus and interpreted the optimized mixture.",
+          "evidence_stage": "688 physical experiments over eight days",
+          "validation_tier": "A",
+          "novelty_scope": "new high-performing formulation",
+          "reported_result": "The autonomous campaign found a photocatalyst mixture with activity about six times higher than the initial formulations.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-020-2442-2",
+          "supporting_source_url": "https://doi.org/10.1038/s41586-020-2442-2",
+          "caveat": "This is discovery of an optimized mixture under a specified assay, not a new fundamental catalytic law or necessarily a new molecule."
+        },
+        {
+          "id": "MAT-2023-009",
+          "publication_year": 2023,
+          "discipline": "Materials and chemistry",
+          "field": "Inorganic materials",
+          "title": "GNoME stable-material candidate atlas",
+          "discovery_class": "computational candidate discovery",
+          "ai_role": "Graph networks predicted stability across a very large inorganic crystal search space.",
+          "human_role": "Materials scientists constructed the training corpus, recalculated stability, compared against experiments, and assessed limitations.",
+          "evidence_stage": "published computational atlas with partial experimental matches",
+          "validation_tier": "B",
+          "novelty_scope": "new predicted crystal structures",
+          "reported_result": "The study reported 2.2 million stable structures, 381,000 on the updated convex hull, 45,500 new prototypes, and 736 matches to independently synthesized structures.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-023-06735-9",
+          "supporting_source_url": "https://doi.org/10.1038/s41586-023-06735-9",
+          "caveat": "The headline structures are predictions, not 381,000 synthesized materials; stability can change with better calculations and says little by itself about synthesizability or useful properties."
+        },
+        {
+          "id": "MAT-2025-010",
+          "publication_year": 2025,
+          "discipline": "Materials and chemistry",
+          "field": "Generative materials design",
+          "title": "MatterGen target-conditioned inorganic material",
+          "discovery_class": "AI-designed and experimentally synthesized material",
+          "ai_role": "A diffusion model generated crystal structures conditioned on target properties.",
+          "human_role": "Scientists selected a candidate, synthesized it, characterized it, and compared the measured property with the design target.",
+          "evidence_stage": "physical synthesis and property measurement",
+          "validation_tier": "A",
+          "novelty_scope": "new AI-designed material candidate",
+          "reported_result": "A generated material was synthesized as a proof of concept and its measured target property was within about 20% of the requested value.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-025-08628-5",
+          "supporting_source_url": "https://doi.org/10.1038/s41586-025-08628-5",
+          "caveat": "One proof-of-concept synthesis does not experimentally validate the much larger generated candidate space or establish manufacturability."
+        },
+        {
+          "id": "BIO-2020-011",
+          "publication_year": 2020,
+          "discipline": "Biomedical science",
+          "field": "Antibiotic discovery",
+          "title": "Halicin as a broad-spectrum antibacterial",
+          "discovery_class": "drug-repurposing discovery",
+          "ai_role": "A deep neural network learned antibacterial activity and screened a repurposing library plus more than ten million purchasable molecules.",
+          "human_role": "Researchers tested hits, named halicin, studied mechanism, and ran animal infection experiments.",
+          "evidence_stage": "in vitro and mouse models",
+          "validation_tier": "A",
+          "novelty_scope": "new antibacterial function for an existing molecule",
+          "reported_result": "Halicin showed broad bactericidal activity and efficacy in mouse models of Clostridioides difficile and pan-resistant Acinetobacter baumannii; eight additional antibacterial hits emerged from 23 tested predictions.",
+          "primary_source_url": "https://doi.org/10.1016/j.cell.2020.01.021",
+          "supporting_source_url": "https://www.broadinstitute.org/publications/broad627466",
+          "caveat": "Halicin was an existing molecule repurposed for a newly identified function; it remains preclinical and is not an approved antibiotic."
+        },
+        {
+          "id": "BIO-2023-012",
+          "publication_year": 2023,
+          "discipline": "Biomedical science",
+          "field": "Antibiotic discovery",
+          "title": "Abaucin, a narrow-spectrum Acinetobacter baumannii antibiotic",
+          "discovery_class": "drug-candidate and mechanism discovery",
+          "ai_role": "A neural network trained on roughly 7,500 screened compounds prioritized structurally distinct molecules.",
+          "human_role": "Researchers performed susceptibility, resistance, genetic, mechanistic, and mouse-wound experiments.",
+          "evidence_stage": "in vitro, mechanism studies, and mouse model",
+          "validation_tier": "A",
+          "novelty_scope": "new antibacterial candidate and target pathway",
+          "reported_result": "Abaucin selectively inhibited A. baumannii, implicated LolE-dependent lipoprotein trafficking, and reduced bacterial burden in a mouse wound model.",
+          "primary_source_url": "https://www.nature.com/articles/s41589-023-01349-8",
+          "supporting_source_url": "https://doi.org/10.1038/s41589-023-01349-8",
+          "caveat": "This is a preclinical lead, not a medicine proven safe or effective in humans."
+        },
+        {
+          "id": "BIO-2023-013",
+          "publication_year": 2023,
+          "discipline": "Biomedical science",
+          "field": "Antibiotic discovery",
+          "title": "Explainable-AI antibiotic class active against MRSA and VRE",
+          "discovery_class": "new chemical-class discovery",
+          "ai_role": "Graph neural networks plus explainability filters screened more than twelve million compounds for predicted activity and low human-cell toxicity.",
+          "human_role": "Researchers tested 283 compounds, analysed structure and resistance, and ran mouse infection models.",
+          "evidence_stage": "in vitro, resistance studies, and mouse models",
+          "validation_tier": "A",
+          "novelty_scope": "new structural class of antibacterial candidates",
+          "reported_result": "The study identified a structurally distinct class active against methicillin-resistant Staphylococcus aureus and vancomycin-resistant enterococci, with low resistance frequency and reduced bacterial titres in mouse models.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-023-06887-8",
+          "supporting_source_url": "https://doi.org/10.1038/s41586-023-06887-8",
+          "caveat": "The compounds are preclinical; explainability highlighted learned substructures but did not make the model or biological mechanism fully understood."
+        },
+        {
+          "id": "BIO-2023-014",
+          "publication_year": 2023,
+          "discipline": "Biomedical science",
+          "field": "Ageing biology",
+          "title": "BRD-K56819078 as a senolytic lead",
+          "discovery_class": "drug-candidate discovery",
+          "ai_role": "A graph neural network trained on a 2,352-compound senolytic screen ranked more than 800,000 molecules.",
+          "human_role": "Researchers tested prioritized compounds in cells and evaluated a lead in aged mice.",
+          "evidence_stage": "in vitro and aged-mouse validation",
+          "validation_tier": "A",
+          "novelty_scope": "new senolytic candidate",
+          "reported_result": "Three drug-like senolytic candidates were validated; BRD-K56819078 reduced senescent-cell burden and senescence-associated gene expression in aged mouse kidneys.",
+          "primary_source_url": "https://www.nature.com/articles/s43587-023-00415-z",
+          "supporting_source_url": "https://doi.org/10.1038/s43587-023-00415-z",
+          "caveat": "Mouse and cell results do not establish rejuvenation, lifespan extension, safety, or efficacy in people."
+        },
+        {
+          "id": "BIO-2024-015",
+          "publication_year": 2024,
+          "discipline": "Biomedical science",
+          "field": "Antimicrobial peptides",
+          "title": "Antibiotic candidates reconstructed from extinct proteomes",
+          "discovery_class": "candidate discovery from ancient sequence space",
+          "ai_role": "APEX machine-learning models mined 10,311,899 ancient protein sequences and prioritized encrypted antimicrobial peptides.",
+          "human_role": "Researchers synthesized 69 candidates and performed microbiology and mouse infection experiments.",
+          "evidence_stage": "in vitro and mouse models",
+          "validation_tier": "A",
+          "novelty_scope": "previously unknown peptide antibiotics from extinct organisms",
+          "reported_result": "The system predicted 37,176 broad-spectrum candidates, including 11,035 absent from living organisms; multiple synthesized leads were active in mouse infection models.",
+          "primary_source_url": "https://www.nature.com/articles/s41551-024-01201-x",
+          "supporting_source_url": "https://doi.org/10.1038/s41551-024-01201-x",
+          "caveat": "Most predicted peptides were not synthesized, and the validated leads remain preclinical."
+        },
+        {
+          "id": "BIO-2025-016",
+          "publication_year": 2025,
+          "discipline": "Biomedical science",
+          "field": "Generative antibiotic design",
+          "title": "NG1 and DN1 de novo antibiotics",
+          "discovery_class": "AI-designed molecule discovery",
+          "ai_role": "Generative deep-learning systems searched more than ten million fragment combinations and designed chemically novel compounds.",
+          "human_role": "Chemists synthesized 24 candidates; biologists tested activity, selectivity, mechanism, resistance, and mouse infection models.",
+          "evidence_stage": "in vitro and mouse models",
+          "validation_tier": "A",
+          "novelty_scope": "de novo antibiotic structures and distinct mechanisms",
+          "reported_result": "Seven of 24 synthesized designs were selectively active; NG1 and DN1 reduced bacterial burden in mouse gonorrhoea and MRSA skin-infection models and acted through distinct mechanisms.",
+          "primary_source_url": "https://doi.org/10.1016/j.cell.2025.07.033",
+          "supporting_source_url": "https://pubmed.ncbi.nlm.nih.gov/40816267/",
+          "caveat": "These are early preclinical leads, not approved drugs; only a tiny fraction of the generated chemical space was synthesized."
+        },
+        {
+          "id": "BIO-2025-017",
+          "publication_year": 2025,
+          "discipline": "Biomedical science",
+          "field": "Pulmonary fibrosis",
+          "title": "TNIK and rentosertib for idiopathic pulmonary fibrosis",
+          "discovery_class": "AI target and drug-candidate discovery",
+          "ai_role": "Generative AI contributed to identifying TNIK as a fibrosis target and designing the small-molecule inhibitor rentosertib.",
+          "human_role": "Researchers performed preclinical studies and a 71-participant randomized phase 2a trial.",
+          "evidence_stage": "randomized phase 2a human trial",
+          "validation_tier": "A",
+          "novelty_scope": "new therapeutic target and AI-designed clinical candidate",
+          "reported_result": "Over 12 weeks, the 60 mg once-daily arm showed a mean FVC change of +98.4 ml versus -20.3 ml for placebo, while the study primarily assessed safety and tolerability.",
+          "primary_source_url": "https://www.nature.com/articles/s41591-025-03743-2",
+          "supporting_source_url": "https://doi.org/10.1038/s41591-025-03743-2",
+          "caveat": "The trial was small and short, FVC was secondary, 16 of 71 participants withdrew, liver-related toxicity caused several discontinuations, and efficacy is not established."
+        },
+        {
+          "id": "BIO-2026-018",
+          "publication_year": 2026,
+          "discipline": "Biomedical science",
+          "field": "Antibiotic discovery",
+          "title": "MP20 and A1 against multidrug-resistant Neisseria gonorrhoeae",
+          "discovery_class": "drug-candidate and mechanism discovery",
+          "ai_role": "A graph neural network trained on 38,650 measured molecules virtually screened about six million compounds.",
+          "human_role": "Researchers tested 213 predictions, investigated mechanism, and used a human vagina-on-a-chip and mouse infection model.",
+          "evidence_stage": "in vitro, organ-on-chip, and mouse model",
+          "validation_tier": "A",
+          "novelty_scope": "new selective antibacterial candidates and mechanism",
+          "reported_result": "Eighty-three of 213 tested predictions inhibited N. gonorrhoeae; MP20 and A1 were structurally unlike existing antibiotics, and A1 was shown to target alanine racemase.",
+          "primary_source_url": "https://doi.org/10.1126/scitranslmed.ads4699",
+          "supporting_source_url": "https://pubmed.ncbi.nlm.nih.gov/42308330/",
+          "caveat": "These are preclinical candidates and have not been shown safe or effective in human patients."
+        },
+        {
+          "id": "BIO-2026-019",
+          "publication_year": 2026,
+          "discipline": "Biomedical science",
+          "field": "Cancer therapeutics",
+          "title": "Co-Scientist acute myeloid leukaemia candidates",
+          "discovery_class": "AI-generated therapeutic-hypothesis discovery",
+          "ai_role": "A multi-agent Gemini system searched and critiqued drug-repurposing and combination hypotheses under expert constraints.",
+          "human_role": "Oncologists curated proposals and researchers performed independent dose-response experiments in cancer and control cell lines.",
+          "evidence_stage": "independent in vitro validation",
+          "validation_tier": "A",
+          "novelty_scope": "new indication hypotheses and combinations",
+          "reported_result": "The system proposed active AML candidates and combinations; KIRA6 showed selective cytotoxicity with an approximately eighteen-fold separation between KG-1a AML and TK6 control cells.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-026-10644-y",
+          "supporting_source_url": "https://doi.org/10.1038/s41586-026-10644-y",
+          "caveat": "Cell-line activity is preliminary; several hits had prior rationale, and none of the reported AML uses or combinations is clinically validated."
+        },
+        {
+          "id": "BIO-2026-020",
+          "publication_year": 2026,
+          "discipline": "Biomedical science",
+          "field": "Liver fibrosis",
+          "title": "Co-Scientist epigenetic targets and repurposing hypotheses for liver fibrosis",
+          "discovery_class": "AI-generated target and drug-hypothesis discovery",
+          "ai_role": "A multi-agent system generated and ranked epigenetic target hypotheses and matching drugs.",
+          "human_role": "Experts selected three hypotheses and researchers tested them in human hepatic organoids with live-cell imaging.",
+          "evidence_stage": "independent human-organoid validation",
+          "validation_tier": "A",
+          "novelty_scope": "new target hypotheses and repurposed candidate uses",
+          "reported_result": "Two of three selected target-drug hypotheses showed significant anti-fibrotic activity without detected cellular toxicity; one effective drug was vorinostat.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-026-10644-y",
+          "supporting_source_url": "https://doi.org/10.1038/s41586-026-10644-y",
+          "caveat": "Organoid results are not evidence of safety or efficacy in patients; one candidate is approved for a different indication only."
+        },
+        {
+          "id": "BIO-2026-021",
+          "publication_year": 2026,
+          "discipline": "Biomedical science",
+          "field": "Ophthalmology",
+          "title": "Ripasudil, KL001 and ABCA1 hypotheses for dry age-related macular degeneration",
+          "discovery_class": "semi-autonomous therapeutic discovery",
+          "ai_role": "The Robin multi-agent system proposed drugs, requested analyses, interpreted returned results, and iterated its hypotheses.",
+          "human_role": "Researchers selected the problem, performed cell experiments and RNA sequencing, and checked AI analyses against human analyses.",
+          "evidence_stage": "in vitro validation in cell lines and geriatric primary human RPE cells",
+          "validation_tier": "A",
+          "novelty_scope": "new repurposing and mechanism hypotheses",
+          "reported_result": "Ripasudil enhanced retinal-pigment-epithelium phagocytosis, KL001 was identified as a previously unproposed enhancer, and RNA-seq supported ABCA1 upregulation.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-026-10652-y",
+          "supporting_source_url": "https://doi.org/10.1038/s41586-026-10652-y",
+          "caveat": "The authors state that in vivo validation is still required; these are not validated treatments for dry AMD."
+        },
+        {
+          "id": "GEN-2024-022",
+          "publication_year": 2024,
+          "discipline": "Genomics and virology",
+          "field": "Metatranscriptomic virology",
+          "title": "LucaProt RNA-virus candidate atlas",
+          "discovery_class": "large-scale biological sequence discovery",
+          "ai_role": "A deep-learning model identified highly divergent RNA-dependent RNA polymerases in 10,487 metatranscriptomes.",
+          "human_role": "Researchers curated datasets, built phylogenies, and confirmed a subset with RT-PCR and RNA-versus-DNA sequencing.",
+          "evidence_stage": "published computational atlas with targeted molecular checks",
+          "validation_tier": "B",
+          "novelty_scope": "putative new RNA-virus species and supergroups",
+          "reported_result": "The study reported 161,979 putative RNA-virus species across 180 supergroups; tens of thousands were described as previously unknown.",
+          "primary_source_url": "https://doi.org/10.1016/j.cell.2024.09.027",
+          "supporting_source_url": "https://pubmed.ncbi.nlm.nih.gov/39389057/",
+          "caveat": "These are sequence-defined putative species, not 161,979 isolated, cultured, or individually validated viruses."
+        },
+        {
+          "id": "ECO-2024-023",
+          "publication_year": 2024,
+          "discipline": "Ecology and animal behaviour",
+          "field": "Bioacoustics",
+          "title": "Contextual and combinatorial structure in sperm-whale codas",
+          "discovery_class": "behavioural-pattern discovery",
+          "ai_role": "Machine-learning and statistical analyses modelled 8,719 codas from an Eastern Caribbean sperm-whale clan.",
+          "human_role": "Researchers collected and annotated recordings and interpreted the discovered acoustic features.",
+          "evidence_stage": "observational analysis of recorded behaviour",
+          "validation_tier": "A",
+          "novelty_scope": "previously undescribed communication structure",
+          "reported_result": "The analysis identified rubato and ornamentation and showed that rhythm, tempo, rubato and ornamentation combine contextually, greatly expanding distinguishable coda patterns.",
+          "primary_source_url": "https://www.nature.com/articles/s41467-024-47221-8",
+          "supporting_source_url": "https://doi.org/10.1038/s41467-024-47221-8",
+          "caveat": "The work did not translate whale language or establish the semantic meaning of codas, and it studied one social clan."
+        },
+        {
+          "id": "NEU-2024-024",
+          "publication_year": 2024,
+          "discipline": "Neuroscience",
+          "field": "Connectomics",
+          "title": "Whole adult Drosophila brain connectome",
+          "discovery_class": "AI-enabled scientific atlas",
+          "ai_role": "Convolutional neural networks performed image alignment and initial neuron segmentation across electron-microscopy volumes.",
+          "human_role": "A large community manually proofread segmentation and assigned biological annotations, estimated at about 33 person-years of work.",
+          "evidence_stage": "human-proofread anatomical reconstruction",
+          "validation_tier": "A",
+          "novelty_scope": "first complete adult fly-brain wiring atlas at synaptic resolution",
+          "reported_result": "The atlas reconstructed 139,255 neurons and more than 50 million synapses, enabling circuit-wide biological analyses.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-024-07558-y",
+          "supporting_source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11446842/",
+          "caveat": "This is a major AI-enabled map, not an autonomous AI discovery; proofreading and interpretation were deeply human."
+        },
+        {
+          "id": "NEU-2025-025",
+          "publication_year": 2025,
+          "discipline": "Neuroscience",
+          "field": "Systems neuroscience",
+          "title": "Higher-order like-to-like wiring rule in mouse visual cortex",
+          "discovery_class": "connectivity-rule discovery",
+          "ai_role": "AI-assisted functional modelling linked visual responses to a dense electron-microscopy connectome and tested wiring hypotheses.",
+          "human_role": "Researchers designed the experiments, imaged tissue and activity, reconstructed circuits, and interpreted connectivity statistics.",
+          "evidence_stage": "multimodal observation and statistical validation",
+          "validation_tier": "A",
+          "novelty_scope": "new organizing rule for neural connectivity",
+          "reported_result": "Beyond pairwise like-to-like connectivity, neurons sharing downstream targets were more functionally similar than pairwise rules predicted, revealing higher-order network structure.",
+          "primary_source_url": "https://www.nature.com/articles/s41586-025-08840-3",
+          "supporting_source_url": "https://doi.org/10.1038/s41586-025-08840-3",
+          "caveat": "The result comes from a bounded mouse visual-cortex volume and should not be generalized to the whole brain or humans without further evidence."
+        }
+      ],
+      "exclusions": [
+        {
+          "id": "EX-001",
+          "year": "2021",
+          "area": "Astronomy",
+          "claim_or_system": "ExoMiner statistically validated 301 Kepler planets",
+          "classification": "adjacent validation",
+          "why_not_counted_as_a_strict_discovery": "The objects had already been detected by the Kepler pipeline and existed as candidates; AI supplied statistical validation rather than first detection.",
+          "source_url": "https://science.nasa.gov/universe/exoplanets/new-deep-learning-method-adds-301-planets-to-keplers-total-count/",
+          "revisit_condition": "Include in a broader registry category for AI-enabled validation."
+        },
+        {
+          "id": "EX-002",
+          "year": "2021-present",
+          "area": "Structural biology",
+          "claim_or_system": "AlphaFold and the AlphaFold Protein Structure Database",
+          "classification": "predictive atlas",
+          "why_not_counted_as_a_strict_discovery": "Predicted structures are scientifically useful but a prediction database is not itself a catalog of experimentally confirmed discoveries; individual downstream discoveries should be registered separately.",
+          "source_url": "https://www.nature.com/articles/s41586-021-03819-2",
+          "revisit_condition": "Add specific downstream biological discoveries when their empirical evidence and AI contribution are traceable."
+        },
+        {
+          "id": "EX-003",
+          "year": "2023",
+          "area": "Materials science",
+          "claim_or_system": "A-Lab autonomous synthesis campaign",
+          "classification": "contested novelty",
+          "why_not_counted_as_a_strict_discovery": "The campaign synthesized 36 of 57 targets, but later analysis and a correction highlighted prior or closely related compositions; counting all 36 as new materials would overstate novelty.",
+          "source_url": "https://www.nature.com/articles/s41586-023-06734-w",
+          "revisit_condition": "Reassess target by target against prior art and independent structural characterization."
+        },
+        {
+          "id": "EX-004",
+          "year": "2023",
+          "area": "Chemistry",
+          "claim_or_system": "Coscientist planned and executed cross-coupling reactions",
+          "classification": "capability demonstration",
+          "why_not_counted_as_a_strict_discovery": "The demonstrated reactions and optimization tasks were known chemistry; the paper primarily established autonomous planning and execution capability.",
+          "source_url": "https://www.nature.com/articles/s41586-023-06792-0",
+          "revisit_condition": "Count only a later novel reaction, mechanism, or compound with explicit experimental novelty analysis."
+        },
+        {
+          "id": "EX-005",
+          "year": "2026",
+          "area": "Microbiology",
+          "claim_or_system": "Co-Scientist cf-PICI host-range mechanism",
+          "classification": "rediscovery",
+          "why_not_counted_as_a_strict_discovery": "The system independently recapitulated a co-timed, then-unpublished human discovery; this is strong capability evidence but not a separate new scientific finding.",
+          "source_url": "https://www.nature.com/articles/s41586-026-10644-y",
+          "revisit_condition": "Represent in a dedicated rediscovery class if the registry expands beyond first discoveries."
+        },
+        {
+          "id": "EX-006",
+          "year": "2022",
+          "area": "Planetary science",
+          "claim_or_system": "THOR asteroid-recovery campaign",
+          "classification": "definition boundary",
+          "why_not_counted_as_a_strict_discovery": "The work recovered many asteroid observations using an orbital-linking algorithm, but it is not clearly a learned AI system under this catalog's operational definition.",
+          "source_url": "https://noirlab.edu/public/news/noirlab2212/",
+          "revisit_condition": "Include if the project adopts a broader definition covering all automated search and optimization algorithms."
+        },
+        {
+          "id": "EX-007",
+          "year": "2026",
+          "area": "Marine geoscience",
+          "claim_or_system": "Seventy-three previously undocumented submarine calderas",
+          "classification": "definition boundary",
+          "why_not_counted_as_a_strict_discovery": "The primary paper describes automated bathymetric-depression detection, principal-component analysis, and expert classification, but does not establish a learned AI model; counting it would conflict with this catalog's operational definition.",
+          "source_url": "https://www.nature.com/articles/s43247-026-03779-3",
+          "revisit_condition": "Include if the project deliberately broadens scope from AI to computational automation."
+        },
+        {
+          "id": "EX-008",
+          "year": "2025",
+          "area": "Quantum physics",
+          "claim_or_system": "Transformer-designed quantum experiments and state generalizations",
+          "classification": "published design or theory candidate",
+          "why_not_counted_as_a_strict_discovery": "The system produced computational experiment designs and generalizations, but no corresponding laboratory discovery was established in the reviewed source.",
+          "source_url": "https://www.nature.com/articles/s42256-025-01153-0",
+          "revisit_condition": "Add to a separate theoretical/design tier or after physical realization."
+        },
+        {
+          "id": "EX-009",
+          "year": "various",
+          "area": "Medicine and Earth science",
+          "claim_or_system": "Diagnostic classifiers, protein-property predictors, weather and climate forecasters",
+          "classification": "out of scope by default",
+          "why_not_counted_as_a_strict_discovery": "Better prediction of a known label or future value is not a discovery unless the work also establishes a new object, mechanism, relationship, candidate, or law.",
+          "source_url": "https://www.nature.com/articles/s41586-023-06221-2",
+          "revisit_condition": "Evaluate individual studies when they make and validate a genuinely novel scientific claim."
+        }
+      ],
+      "coverage": [
+        {
+          "discipline": "Astronomy",
+          "included_cases": 3,
+          "review_status": "seed audit complete",
+          "what_was_covered": "Exoplanets, radio transients, autonomous transient classification",
+          "main_gap_or_next_search": "Systematic sweep of stellar, galactic, gravitational-wave, and cosmology literature."
+        },
+        {
+          "discipline": "Planetary and Earth science",
+          "included_cases": 2,
+          "review_status": "seed audit partial",
+          "what_was_covered": "Lunar mapping and seismology",
+          "main_gap_or_next_search": "Climate, oceanography, atmospheric chemistry, hydrology, mineralogy, and remote-sensing discoveries need dedicated reviews."
+        },
+        {
+          "discipline": "Archaeology and paleontology",
+          "included_cases": 2,
+          "review_status": "seed audit partial",
+          "what_was_covered": "Nazca survey and fossil segmentation",
+          "main_gap_or_next_search": "Broader satellite archaeology, paleoanthropology, and fossil-tomography literature needs systematic screening."
+        },
+        {
+          "discipline": "Materials and chemistry",
+          "included_cases": 3,
+          "review_status": "seed audit partial",
+          "what_was_covered": "Closed-loop formulation search, crystal prediction, generative material design",
+          "main_gap_or_next_search": "Catalysis, reaction discovery, polymers, batteries, and contested autonomous-lab claims need target-by-target novelty audits."
+        },
+        {
+          "discipline": "Biomedical science",
+          "included_cases": 11,
+          "review_status": "seed audit strong but not exhaustive",
+          "what_was_covered": "Antibiotics, senolytics, fibrosis, cancer, ophthalmology",
+          "main_gap_or_next_search": "Cancer targets, rare disease, immunology, protein and peptide design, diagnostics, and later-stage replication need systematic expansion."
+        },
+        {
+          "discipline": "Genomics and virology",
+          "included_cases": 1,
+          "review_status": "seed audit partial",
+          "what_was_covered": "Metatranscriptomic RNA-virus discovery",
+          "main_gap_or_next_search": "Gene regulation, microbiome, protein function, genome annotation, and synthetic biology remain under-covered."
+        },
+        {
+          "discipline": "Ecology and animal behaviour",
+          "included_cases": 1,
+          "review_status": "seed audit partial",
+          "what_was_covered": "Sperm-whale communication structure",
+          "main_gap_or_next_search": "Biodiversity surveys, conservation, species discovery, migration, and ecosystem mechanisms need dedicated review."
+        },
+        {
+          "discipline": "Neuroscience",
+          "included_cases": 2,
+          "review_status": "seed audit partial",
+          "what_was_covered": "Connectomics and circuit wiring rules",
+          "main_gap_or_next_search": "Human, vertebrate, molecular, cognitive, and clinical neuroscience remain under-covered."
+        },
+        {
+          "discipline": "Physics",
+          "included_cases": 0,
+          "review_status": "no strict empirical case included",
+          "what_was_covered": "Quantum-design and theory examples were screened but did not meet the empirical rule",
+          "main_gap_or_next_search": "Search experimental particle, condensed-matter, plasma, fusion, optics, and quantum laboratories for AI-originated and physically validated novelty."
+        },
+        {
+          "discipline": "Botany and agricultural science",
+          "included_cases": 0,
+          "review_status": "not yet systematically audited",
+          "what_was_covered": "No claim was counted from the initial broad sweep",
+          "main_gap_or_next_search": "Review plant genomics, crop breeding, phenotyping, soil science, and automated greenhouse laboratories."
+        },
+        {
+          "discipline": "Other social and behavioural sciences",
+          "included_cases": 0,
+          "review_status": "outside initial natural-science emphasis",
+          "what_was_covered": "Archaeology was included because it produced field-verified physical discoveries",
+          "main_gap_or_next_search": "Define whether the future registry should include economics, psychology, linguistics, and computational social science."
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "summary_source",
+      "label": "Discovery-ledger summary query",
+      "path": "discoveries.csv",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "id": "discovery-summary-2026-08-02",
+        "sql": "SELECT COUNT(*) AS reviewed_cases, COUNT(DISTINCT discipline) AS discipline_groups, SUM(CASE WHEN validation_tier = 'A' THEN 1 ELSE 0 END) AS tier_a_cases, SUM(CASE WHEN validation_tier = 'B' THEN 1 ELSE 0 END) AS tier_b_cases, '2026-08-02' AS cut_off_date FROM discoveries;",
+        "description": "Reconciles the included row count, represented disciplines, and validation tiers.",
+        "executed_at": "2026-08-02T07:21:56+05:00",
+        "filters": [
+          "Input table discoveries is imported from discoveries.csv with its header row",
+          "Cut-off date: 2026-08-02",
+          "One row per reviewed study-level case"
+        ],
+        "metric_definitions": [
+          "reviewed_cases = count of included rows; it is not a count of comparable scientific objects",
+          "discipline_groups = distinct broad discipline labels among included rows",
+          "Tier A = case-appropriate empirical or observational corroboration; it does not imply replication, approval, or settled truth",
+          "Tier B = published computational or statistical result with partial validation; most reported entities remain unverified individually"
+        ],
+        "tables_used": [
+          "discoveries.csv imported as discoveries"
+        ]
+      }
+    },
+    {
+      "id": "discipline_summary_source",
+      "label": "Cases-by-discipline query",
+      "path": "discoveries.csv",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "id": "discipline-coverage-2026-08-02",
+        "sql": "SELECT discipline, COUNT(*) AS included_cases, SUM(CASE WHEN validation_tier = 'A' THEN 1 ELSE 0 END) AS tier_a_cases, SUM(CASE WHEN validation_tier = 'B' THEN 1 ELSE 0 END) AS tier_b_cases, MIN(CAST(publication_year AS INTEGER)) AS earliest_year, MAX(CAST(publication_year AS INTEGER)) AS latest_year, ROUND(100.0 * COUNT(*) / (SELECT COUNT(*) FROM discoveries), 1) AS catalog_share_pct FROM discoveries GROUP BY discipline ORDER BY included_cases DESC, discipline ASC;",
+        "description": "Aggregates reviewed cases by broad discipline while retaining tier, year-range, and catalog-share context.",
+        "executed_at": "2026-08-02T07:21:56+05:00",
+        "filters": [
+          "Input table discoveries is imported from discoveries.csv with its header row",
+          "Cut-off date: 2026-08-02",
+          "Unweighted count of study-level cases"
+        ],
+        "metric_definitions": [
+          "included_cases = included ledger rows in the discipline",
+          "catalog_share_pct = discipline rows divided by all included rows; it measures this audit's composition, not scientific productivity"
+        ],
+        "tables_used": [
+          "discoveries.csv imported as discoveries"
+        ]
+      }
+    },
+    {
+      "id": "discoveries_source",
+      "label": "Reviewed AI-enabled scientific discovery ledger",
+      "path": "discoveries.csv",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "id": "discovery-detail-2026-08-02",
+        "sql": "SELECT id, CAST(publication_year AS INTEGER) AS publication_year, discipline, field, title, discovery_class, ai_role, human_role, evidence_stage, validation_tier, novelty_scope, reported_result, primary_source_url, supporting_source_url, caveat FROM discoveries ORDER BY publication_year DESC, id ASC;",
+        "description": "Study-level cases meeting the five-part inclusion rule, with primary links and explicit evidence boundaries.",
+        "executed_at": "2026-08-02T07:21:56+05:00",
+        "filters": [
+          "Cut-off date: 2026-08-02",
+          "One row per reviewed study-level case, not per discovered object",
+          "Requires a material AI role, a specific scientific novelty claim, and inspectable primary or authoritative evidence",
+          "Predictions without corroboration, rediscoveries, validation-only cases, and capability demonstrations are excluded from the strict ledger"
+        ],
+        "metric_definitions": [
+          "reviewed_cases = count of included rows; it is not a count of comparable scientific objects",
+          "Tier A = case-appropriate empirical or observational corroboration; it does not imply replication, approval, or settled truth",
+          "Tier B = published computational or statistical result with partial validation; most reported entities remain unverified individually"
+        ],
+        "tables_used": [
+          "discoveries.csv"
+        ]
+      }
+    },
+    {
+      "id": "exclusions_source",
+      "label": "Adjacent and excluded claims ledger",
+      "path": "exclusions.csv",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "id": "exclusion-detail-2026-08-02",
+        "sql": "SELECT id, year, area, claim_or_system, classification, why_not_counted_as_a_strict_discovery, source_url, revisit_condition FROM exclusions ORDER BY year DESC, id ASC;",
+        "description": "Influential claims kept outside the strict discovery count because they are validation-only, predictive, rediscovered, contested, or capability demonstrations.",
+        "executed_at": "2026-08-02T07:21:56+05:00",
+        "filters": [
+          "Reviewed through 2026-08-02",
+          "Exclusion is methodological and may be revisited when evidence changes"
+        ],
+        "tables_used": [
+          "exclusions.csv"
+        ]
+      }
+    },
+    {
+      "id": "coverage_source",
+      "label": "Discipline coverage ledger",
+      "path": "coverage_ledger.csv",
+      "query": {
+        "engine": "sqlite",
+        "language": "sql",
+        "id": "coverage-detail-2026-08-02",
+        "sql": "SELECT discipline, CAST(included_cases AS INTEGER) AS included_cases, review_status, what_was_covered, main_gap_or_next_search FROM coverage ORDER BY included_cases DESC, discipline ASC;",
+        "description": "Coverage status and known gaps for this first cross-science sweep.",
+        "executed_at": "2026-08-02T07:21:56+05:00",
+        "filters": [
+          "Included-case counts reconcile to discoveries.csv",
+          "Zero means no strict case was added in this sweep, not proof that none exists"
+        ],
+        "tables_used": [
+          "coverage_ledger.csv"
+        ]
+      }
+    },
+    {
+      "id": "methodology_source",
+      "label": "Audit methodology",
+      "path": "METHODOLOGY.md",
+      "query": {
+        "engine": "document",
+        "language": "markdown",
+        "description": "Definitions, inclusion rule, validation tiers, source procedure, limitations, and requirements for a living registry.",
+        "executed_at": "2026-08-02T07:21:56+05:00",
+        "tables_used": [
+          "METHODOLOGY.md"
+        ]
+      }
+    }
+  ]
+}
