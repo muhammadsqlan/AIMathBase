@@ -109,10 +109,11 @@ function App() {
   }
 
   function selectRecord(record: MathRecord) {
+    const isChangingPage = page !== "registry";
     setPage("registry");
     setSelectedSlug(record.slug);
     window.history.replaceState(null, "", `#result/${record.slug}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (isChangingPage) window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function showRegistry() {
