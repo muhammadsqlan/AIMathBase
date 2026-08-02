@@ -20,7 +20,10 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm science:data:check
+      - run: pnpm cf:types:check
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
       - run: pnpm cf:deploy:dry
+      - run: pnpm cf:deploy:legacy:dry

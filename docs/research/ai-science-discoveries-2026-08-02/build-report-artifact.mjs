@@ -478,10 +478,31 @@ const artifact = {
   sources,
 };
 
-writeFileSync(join(baseDir, "artifact.json"), `${JSON.stringify(artifact, null, 2)}\n`, "utf8");
+const serializedArtifact = `${JSON.stringify(artifact, null, 2)}\n`;
+const outputPaths = [
+  join(baseDir, "artifact.json"),
+  join(baseDir, "../../../public/data/science-registry.json"),
+];
+const checkOnly = process.argv.includes("--check");
+
+if (checkOnly) {
+  const stalePaths = outputPaths.filter((outputPath) => {
+    try {
+      return readFileSync(outputPath, "utf8") !== serializedArtifact;
+    } catch {
+      return true;
+    }
+  });
+  if (stalePaths.length > 0) {
+    throw new Error(`Generated science registry is out of date: ${stalePaths.join(", ")}. Run pnpm science:data.`);
+  }
+} else {
+  for (const outputPath of outputPaths) writeFileSync(outputPath, serializedArtifact, "utf8");
+}
 
 console.log(JSON.stringify({
-  output: join(baseDir, "artifact.json"),
+  outputs: outputPaths,
+  mode: checkOnly ? "check" : "write",
   reviewed_cases: discoveries.length,
   discipline_groups: disciplines.length,
   tier_a_cases: tierACases,

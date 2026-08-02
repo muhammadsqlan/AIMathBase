@@ -1,5 +1,6 @@
 import type { ExportedHandler } from "@cloudflare/workers-types";
 import scienceArtifactJson from "../public/data/science-registry.json";
+import { pageMetadataForPath, type PageMetadata } from "../src/pageMetadata";
 import type { ScienceRecord, ScienceRegistryResponse, ScienceRegistrySummary } from "../src/scienceTypes";
 import type { LabRef, MathRecord, RegistryResponse, SourceLink } from "../src/types";
 
@@ -72,6 +73,19 @@ const JSON_HEADERS = {
   "cache-control": "public, max-age=60, s-maxage=300",
   "x-content-type-options": "nosniff",
 };
+
+function rewritePageMetadata(response: Response, metadata: PageMetadata): Response {
+  if (!response.headers.get("content-type")?.includes("text/html")) return response;
+
+  return new HTMLRewriter()
+    .on("title", { element: (element) => { element.setInnerContent(metadata.title); } })
+    .on('meta[name="description"]', { element: (element) => { element.setAttribute("content", metadata.description); } })
+    .on('link[rel="canonical"]', { element: (element) => { element.setAttribute("href", metadata.canonicalUrl); } })
+    .on('meta[property="og:title"]', { element: (element) => { element.setAttribute("content", metadata.title); } })
+    .on('meta[property="og:description"]', { element: (element) => { element.setAttribute("content", metadata.description); } })
+    .on('meta[property="og:url"]', { element: (element) => { element.setAttribute("content", metadata.canonicalUrl); } })
+    .transform(response);
+}
 
 function json(data: unknown, status = 200, headers: HeadersInit = {}): Response {
   const cacheHeader = status >= 400 ? { "cache-control": "no-store" } : {};
@@ -163,7 +177,7 @@ async function loadRecords(db: D1Database, slug?: string): Promise<MathRecord[]>
   return rows.map((row) => mapRecord(row, sourceMap.get(row.id) ?? [], labMap.get(row.id) ?? []));
 }
 
-async function api(request: Request, env: Env, url: URL): Promise<Response> {
+export async function handleApi(request: Request, env: Env, url: URL): Promise<Response> {
   if (request.method !== "GET" && request.method !== "HEAD") {
     return json({ error: "Method not allowed" }, 405, { allow: "GET, HEAD" });
   }
@@ -177,8 +191,12 @@ async function api(request: Request, env: Env, url: URL): Promise<Response> {
   }
 
   if (url.pathname === "/api/science" || url.pathname === "/api/science/export.json") {
-    const registry = await loadScienceRegistry();
     const boardSlug = url.searchParams.get("board");
+    if (boardSlug !== null && !Object.hasOwn(BOARD_DISCIPLINES, boardSlug)) {
+      return json({ error: "Science board not found", board: boardSlug }, 404);
+    }
+
+    const registry = await loadScienceRegistry();
     const discipline = boardSlug ? BOARD_DISCIPLINES[boardSlug] : undefined;
     const records = discipline ? registry.records.filter((record) => record.discipline === discipline) : registry.records;
     const payload = url.pathname.endsWith("export.json")
@@ -237,8 +255,11 @@ export default {
         target.search = url.search;
         return Response.redirect(target.toString(), 308);
       }
-      if (url.pathname.startsWith("/api/")) return await api(request, env, url);
-      return env.ASSETS.fetch(request);
+      if (url.pathname.startsWith("/api/")) return await handleApi(request, env, url);
+      const assetResponse = await env.ASSETS.fetch(request);
+      return url.pathname === "/math" || url.pathname === "/math/"
+        ? rewritePageMetadata(assetResponse, pageMetadataForPath("/math"))
+        : assetResponse;
     } catch (error) {
       console.error("Unhandled request error", { path: url.pathname, error });
       return url.pathname.startsWith("/api/")

@@ -267,6 +267,10 @@
 .science-finding h3,
 .science-sources h3 { margin: 0 0 7px; }
 .science-finding p { margin: 0; color: #3f4958; font-size: 10px; line-height: 1.5; }
+.science-evidence-boundaries { padding-top: 9px; }
+.science-evidence-boundaries section { padding: 10px 0; border-top: 1px solid #eceef2; }
+.science-evidence-boundaries h3 { margin: 0 0 6px; }
+.science-evidence-boundaries p { margin: 0; color: #3f4958; font-size: 10px; line-height: 1.5; }
 .science-sources { padding-top: 17px; }
 .science-sources a { padding: 9px 0; border-bottom: 1px solid #eceef2; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--blue); font-size: 10px; line-height: 1.35; text-decoration: none; }
 .science-sources a:last-child { border-bottom: 0; }

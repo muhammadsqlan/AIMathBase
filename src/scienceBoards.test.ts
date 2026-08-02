@@ -25,6 +25,7 @@ describe("Science Board registry", () => {
     for (const record of records) {
       expect(record.ai_role.length).toBeGreaterThan(20);
       expect(record.human_role.length).toBeGreaterThan(20);
+      expect(record.novelty_scope.length).toBeGreaterThan(20);
       expect(record.caveat.length).toBeGreaterThan(20);
       expect(record.primary_source_url).toMatch(/^https:\/\//);
       expect(record.supporting_source_url).toMatch(/^https:\/\//);
@@ -35,5 +36,11 @@ describe("Science Board registry", () => {
     const mathematics = SCIENCE_BOARDS.find((board) => board.slug === "mathematics");
     expect(mathematics?.original).toBe(true);
     expect(mathematics?.discipline).toBeNull();
+  });
+
+  it("keeps the published board totals reconciled", () => {
+    expect(SCIENCE_BOARDS).toHaveLength(15);
+    expect(SCIENCE_BOARDS.filter((board) => board.status === "active")).toHaveLength(9);
+    expect(SCIENCE_BOARDS.filter((board) => board.status === "researching")).toHaveLength(6);
   });
 });

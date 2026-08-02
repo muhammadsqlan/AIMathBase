@@ -12,7 +12,7 @@ The Mathematics board contains 42 reviewed records across 25 mathematical fields
 
 These are curated collections, not systematic reviews, claims of completeness, or proof of historical priority. Under-audited boards explicitly display **Research in progress** instead of implying that no discoveries exist.
 
-Science Board currently exposes 15 broad boards spanning formal, natural, applied, and social sciences. Eight contain reviewed records; the other seven define the next audit areas.
+Science Board currently exposes 15 broad boards spanning formal, natural, applied, and social sciences. Nine contain reviewed records, including Mathematics; the other six are marked **Research in progress** and define the next audit areas.
 
 ## Mathematics board
 

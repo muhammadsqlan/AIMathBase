@@ -13,6 +13,8 @@ import {
   X,
 } from "lucide-react";
 import { SCIENCE_BOARDS, boardBySlug, boardForDiscipline } from "./scienceBoards";
+import { applyPageMetadata } from "./applyPageMetadata";
+import { pageMetadataForPath } from "./pageMetadata";
 import type {
   ScienceBoardDefinition,
   ScienceRecord,
@@ -49,9 +51,7 @@ function useScienceRegistry() {
 
 function usePageMetadata(title: string, path: string) {
   useEffect(() => {
-    document.title = title;
-    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    canonical?.setAttribute("href", `https://scienceboard.sqlan.workers.dev${path}`);
+    applyPageMetadata(pageMetadataForPath(path, title));
   }, [path, title]);
 }
 
@@ -401,7 +401,7 @@ function BoardPage({ board }: { board: ScienceBoardDefinition }) {
   );
 }
 
-function ScienceRecordDetail({ record, onClose }: { record: ScienceRecord; onClose: () => void }) {
+export function ScienceRecordDetail({ record, onClose }: { record: ScienceRecord; onClose: () => void }) {
   return (
     <div className="science-detail-inner">
       <div className="science-detail-topline"><span>{record.id}</span><button type="button" onClick={onClose} aria-label="Close detail"><X size={17} /></button></div>
@@ -414,6 +414,12 @@ function ScienceRecordDetail({ record, onClose }: { record: ScienceRecord; onClo
         <div><dt>Validation</dt><dd>{record.evidence_stage}</dd></div>
       </dl>
       <section className="science-finding"><h3>Result</h3><p>{record.reported_result}</p></section>
+      <div className="science-evidence-boundaries">
+        <section><h3>AI contribution</h3><p>{record.ai_role}</p></section>
+        <section><h3>Human scientific work</h3><p>{record.human_role}</p></section>
+        <section><h3>Novelty scope</h3><p>{record.novelty_scope}</p></section>
+        <section><h3>Evidence boundary</h3><p>{record.caveat}</p></section>
+      </div>
       <section className="science-sources">
         <h3>Sources</h3>
         <a href={record.primary_source_url} target="_blank" rel="noreferrer"><span><small>Primary source</small>{sourceHost(record.primary_source_url)}</span><ArrowUpRight size={16} /></a>
