@@ -9,6 +9,7 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
+import { LabsView } from "./LabsView";
 import type { MathRecord, Novelty, Outcome, RegistryResponse, VerificationTier } from "./types";
 
 const outcomeLabels: Record<Outcome, string> = {
@@ -55,6 +56,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [mobileFilters, setMobileFilters] = useState(false);
+  const [page, setPage] = useState<"registry" | "labs">(() => window.location.hash === "#labs" ? "labs" : "registry");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -76,6 +78,12 @@ function App() {
       })
       .finally(() => setLoading(false));
     return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    const syncPageToHash = () => setPage(window.location.hash === "#labs" ? "labs" : "registry");
+    window.addEventListener("hashchange", syncPageToHash);
+    return () => window.removeEventListener("hashchange", syncPageToHash);
   }, []);
 
   const domains = useMemo(() => ["All fields", ...Array.from(new Set(records.map((record) => record.domain))).sort()], [records]);
@@ -101,8 +109,22 @@ function App() {
   }
 
   function selectRecord(record: MathRecord) {
+    setPage("registry");
     setSelectedSlug(record.slug);
     window.history.replaceState(null, "", `#result/${record.slug}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function showRegistry() {
+    setPage("registry");
+    window.history.replaceState(null, "", "#top");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function showLabs() {
+    setPage("labs");
+    window.history.replaceState(null, "", "#labs");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function clearFilters() {
@@ -148,14 +170,21 @@ function App() {
   return (
     <div className="site-shell">
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="AIMathBase home"><span className="brand-mark">AI</span>MathBase</a>
+        <a className="brand" href="#top" onClick={showRegistry} aria-label="AIMathBase home"><span className="brand-mark">AI</span>MathBase</a>
         <nav className="desktop-nav" aria-label="Primary navigation">
-          <a href="#top">Home</a>
+          <a href="#top" onClick={showRegistry} aria-current={page === "registry" ? "page" : undefined}>Home</a>
+          <a href="#labs" onClick={showLabs} aria-current={page === "labs" ? "page" : undefined}>Leaderboard</a>
           <a href="https://github.com/muhammadsqlan/AIMathBase/issues/new?template=submit-a-result.yml" target="_blank" rel="noreferrer">Contribute</a>
         </nav>
-        <a className="mobile-contribute" href="https://github.com/muhammadsqlan/AIMathBase/issues/new?template=submit-a-result.yml" target="_blank" rel="noreferrer">Contribute</a>
+        <nav className="mobile-nav" aria-label="Mobile navigation">
+          <a href="#labs" onClick={showLabs} aria-current={page === "labs" ? "page" : undefined}>Leaderboard</a>
+          <a href="https://github.com/muhammadsqlan/AIMathBase/issues/new?template=submit-a-result.yml" target="_blank" rel="noreferrer">Contribute</a>
+        </nav>
       </header>
 
+      {page === "labs" ? (
+        <LabsView records={records} loading={loading} error={error} onOpenRecord={selectRecord} />
+      ) : (
       <main id="top">
         <section className="hero">
           <h1>What has AI actually proved in mathematics?</h1>
@@ -206,6 +235,7 @@ function App() {
         </section>
 
       </main>
+      )}
 
       {mobileFilters && <div className="mobile-overlay" role="dialog" aria-modal="true" aria-label="Registry filters"><button className="overlay-dismiss" onClick={() => setMobileFilters(false)} aria-label="Close filters" /><div className="mobile-filter-sheet">{filters}<button className="apply-button" onClick={() => setMobileFilters(false)}>Show {filtered.length} results</button></div></div>}
     </div>
@@ -230,6 +260,7 @@ function RecordDetail({ record, onClose }: { record: MathRecord; onClose: () => 
       <dl>
         <div><dt>Date</dt><dd>{formatDate(record.eventDate)}</dd></div>
         <div><dt>Field</dt><dd>{record.domain}</dd></div>
+        <div><dt>Lab / team</dt><dd>{record.labs.map((lab) => lab.name).join(", ") || "Not attributed"}</dd></div>
         <div><dt>AI system</dt><dd>{record.aiSystem}</dd></div>
         <div><dt>Evidence</dt><dd>{verificationLabels[record.verificationTier]}</dd></div>
       </dl>

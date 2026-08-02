@@ -9,6 +9,14 @@ export interface SourceLink {
   primary: boolean;
 }
 
+export type LabKind = "company" | "academic" | "independent";
+
+export interface LabRef {
+  slug: string;
+  name: string;
+  kind: LabKind;
+}
+
 export interface MathRecord {
   id: number;
   slug: string;
@@ -27,6 +35,7 @@ export interface MathRecord {
   featured: boolean;
   tags: string[];
   sources: SourceLink[];
+  labs: LabRef[];
 }
 
 export interface RegistryResponse {

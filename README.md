@@ -6,7 +6,7 @@ The live registry is designed around a simple rule: **the caveat travels with th
 
 ## What is included
 
-The initial release contains 32 reviewed records across 18 fields, with 48 links to papers, formal-proof repositories, original announcements, expert reviews, project pages, and canonical problem trackers. It is a curated seed, not a claim to contain every AI-assisted result or establish priority.
+The registry contains 42 reviewed records across 25 fields, with 81 links to papers, formal-proof repositories, original announcements, expert reviews, project pages, and canonical problem trackers. It is a curated collection, not a claim to contain every AI-assisted result or establish priority.
 
 The registry distinguishes:
 
@@ -14,7 +14,7 @@ The registry distinguishes:
 - new results from human–AI work, rediscoveries, formalizations, and capability-only demonstrations;
 - formal kernel checking, publication, expert checking, and reported-but-unverified claims.
 
-The public interface includes full-text search, outcome/novelty/evidence/field filters, evidence drawers, stable hash links, and a machine-readable JSON export.
+The public interface includes full-text search, outcome/novelty/evidence/field filters, evidence drawers, a source-backed lab leaderboard, stable hash links, and a machine-readable JSON export. Leaderboard rank uses the count of records labelled `new-result`; outcome and verification counts remain separate.
 
 ## Architecture
 

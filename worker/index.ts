@@ -1,5 +1,5 @@
 import type { ExportedHandler } from "@cloudflare/workers-types";
-import type { MathRecord, RegistryResponse, SourceLink } from "../src/types";
+import type { LabRef, MathRecord, RegistryResponse, SourceLink } from "../src/types";
 
 interface Env {
   DB: D1Database;
@@ -33,6 +33,13 @@ interface SourceRow {
   is_primary: number;
 }
 
+interface LabRow {
+  record_id: number;
+  slug: string;
+  name: string;
+  kind: LabRef["kind"];
+}
+
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "cache-control": "public, max-age=60, s-maxage=300",
@@ -44,7 +51,7 @@ function json(data: unknown, status = 200, headers: HeadersInit = {}): Response 
   return Response.json(data, { status, headers: { ...JSON_HEADERS, ...cacheHeader, ...headers } });
 }
 
-function mapRecord(row: RecordRow, sources: SourceLink[]): MathRecord {
+function mapRecord(row: RecordRow, sources: SourceLink[], labs: LabRef[]): MathRecord {
   return {
     id: row.id,
     slug: row.slug,
@@ -63,6 +70,7 @@ function mapRecord(row: RecordRow, sources: SourceLink[]): MathRecord {
     featured: row.featured === 1,
     tags: JSON.parse(row.tags_json) as string[],
     sources,
+    labs,
   };
 }
 
@@ -76,10 +84,20 @@ async function loadRecords(db: D1Database, slug?: string): Promise<MathRecord[]>
 
   const ids = rows.map((row) => row.id);
   const placeholders = ids.map(() => "?").join(",");
-  const sourceResult = await db
-    .prepare(`SELECT record_id, kind, title, url, is_primary FROM sources WHERE record_id IN (${placeholders}) ORDER BY is_primary DESC, id`)
-    .bind(...ids)
-    .all<SourceRow>();
+  const [sourceResult, labResult] = await Promise.all([
+    db
+      .prepare(`SELECT record_id, kind, title, url, is_primary FROM sources WHERE record_id IN (${placeholders}) ORDER BY is_primary DESC, id`)
+      .bind(...ids)
+      .all<SourceRow>(),
+    db
+      .prepare(`SELECT record_labs.record_id, labs.slug, labs.name, labs.kind
+        FROM record_labs
+        JOIN labs ON labs.id = record_labs.lab_id
+        WHERE record_labs.record_id IN (${placeholders})
+        ORDER BY labs.name`)
+      .bind(...ids)
+      .all<LabRow>(),
+  ]);
 
   const sourceMap = new Map<number, SourceLink[]>();
   for (const source of sourceResult.results) {
@@ -93,7 +111,15 @@ async function loadRecords(db: D1Database, slug?: string): Promise<MathRecord[]>
     sourceMap.set(source.record_id, bucket);
   }
 
-  return rows.map((row) => mapRecord(row, sourceMap.get(row.id) ?? []));
+
+  const labMap = new Map<number, LabRef[]>();
+  for (const lab of labResult.results) {
+    const bucket = labMap.get(lab.record_id) ?? [];
+    bucket.push({ slug: lab.slug, name: lab.name, kind: lab.kind });
+    labMap.set(lab.record_id, bucket);
+  }
+
+  return rows.map((row) => mapRecord(row, sourceMap.get(row.id) ?? [], labMap.get(row.id) ?? []));
 }
 
 async function api(request: Request, env: Env, url: URL): Promise<Response> {
@@ -115,15 +141,15 @@ async function api(request: Request, env: Env, url: URL): Promise<Response> {
       total: count?.count ?? 0,
       latestEventDate: count?.latest ?? null,
       domains: domains.results,
-      methodologyVersion: "1.0",
+      methodologyVersion: "1.1",
     });
   }
 
   if (url.pathname === "/api/records" || url.pathname === "/api/export.json") {
     const records = await loadRecords(env.DB);
-    const payload: RegistryResponse = { records, total: records.length, updatedAt: "2026-08-01" };
+    const payload: RegistryResponse = { records, total: records.length, updatedAt: "2026-08-02" };
     const disposition: Record<string, string> = url.pathname.endsWith("export.json")
-      ? { "content-disposition": 'attachment; filename="aimathbase-export-2026-08-01.json"' }
+      ? { "content-disposition": 'attachment; filename="aimathbase-export-2026-08-02.json"' }
       : {};
     return json(payload, 200, disposition);
   }

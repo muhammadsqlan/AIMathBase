@@ -1,6 +1,6 @@
 # AIMathBase methodology
 
-Version 1.0 — August 1, 2026
+Version 1.1 — August 2, 2026
 
 ## Inclusion rule
 
@@ -36,6 +36,17 @@ An X post can establish provenance for an announcement, but it is not automatica
 - **Published:** a paper or comparable research report presents reproducible artifacts or peer-reviewed evidence.
 - **Expert checked:** named mathematicians or a specialist project report checking the result, without a public formal proof.
 - **Reported:** an announcement exists but stronger independent evidence has not yet been located.
+
+## Leaderboard
+
+The lab leaderboard ranks AI labs and system-building research teams by their number of registry records labelled **New result**. The score is a count, not a weighted points formula.
+
+- One qualifying registry record contributes one score unit, even when an aggregate source contains several theorems or counterexamples.
+- A shared result contributes one credited record to each named lab or system-building team. Totals across labs can therefore exceed the number of unique registry records.
+- New proofs, new disproofs, and new discoveries are reported separately.
+- Human–AI results, rediscoveries, formalizations, and capability benchmarks remain visible in a lab's credited record total but do not increase its new-result score.
+- Formal checking is an evidence category, not a novelty multiplier, and is reported in a separate column.
+- Attribution is stored per record from the cited artifact. It is not inferred at request time from model-name text.
 
 ## Editorial safeguards
 
