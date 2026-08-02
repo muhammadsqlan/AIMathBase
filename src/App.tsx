@@ -67,7 +67,9 @@ function App() {
       })
       .then((payload) => {
         setRecords(payload.records);
-        const hashSlug = window.location.hash.replace(/^#result\//, "");
+        const hashSlug = window.location.hash.startsWith("#result/")
+          ? window.location.hash.replace(/^#result\//, "")
+          : "";
         const initial = payload.records.find((record) => record.slug === hashSlug) ?? payload.records.find((record) => record.featured);
         const compactViewport = window.matchMedia("(max-width: 760px)").matches;
         setSelectedSlug(compactViewport && !hashSlug ? null : (initial?.slug ?? payload.records[0]?.slug ?? null));
@@ -188,12 +190,12 @@ function App() {
       ) : (
       <main id="top">
         <section className="hero">
-          <h1>What has AI actually proved in mathematics?</h1>
+          <h1>Results</h1>
           <div className="search-row">
             <label className="search-box">
               <Search size={20} aria-hidden="true" />
               <span className="sr-only">Search the registry</span>
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search results, systems, fields…" />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search" />
               {query && <button onClick={() => setQuery("")} aria-label="Clear search"><X size={16} /></button>}
             </label>
             <button className="filter-button" onClick={() => setMobileFilters(true)}><SlidersHorizontal size={17} /> Filter {activeFilterCount > 0 && <span>{activeFilterCount}</span>}</button>
@@ -206,11 +208,11 @@ function App() {
           <div className="results-panel">
             <div className="results-head">
               <div><strong>{filtered.length}</strong> {filtered.length === 1 ? "result" : "results"}</div>
-              <a href="/api/export.json"><ArrowDownToLine size={15} /> Export JSON</a>
+              <a href="/api/export.json"><ArrowDownToLine size={15} /> JSON</a>
             </div>
-            {loading && <div className="empty-state"><span className="loader" /> Loading the evidence…</div>}
+            {loading && <div className="empty-state"><span className="loader" /> Loading…</div>}
             {error && <div className="empty-state error-state"><CircleAlert /> {error}</div>}
-            {!loading && !error && filtered.length === 0 && <div className="empty-state">No records match these filters.</div>}
+            {!loading && !error && filtered.length === 0 && <div className="empty-state">No results.</div>}
             <div className="record-list">
               {filtered.map((record) => (
                 <button key={record.id} className={`record-row${record.slug === selectedSlug ? " is-selected" : ""}`} onClick={() => selectRecord(record)}>
@@ -221,7 +223,6 @@ function App() {
                       <span className="novelty">{noveltyLabels[record.novelty]}</span>
                     </div>
                     <h2>{record.title}</h2>
-                    <p>{record.summary}</p>
                     <div className="record-meta"><span>{record.domain}</span><span>{record.aiSystem}</span><span>{verificationLabels[record.verificationTier]}</span></div>
                   </div>
                   <ChevronRight className="row-arrow" size={19} aria-hidden="true" />
@@ -231,7 +232,7 @@ function App() {
           </div>
 
           <aside className={`detail-panel${selected ? " has-record" : ""}`} aria-label="Selected result detail">
-            {selected ? <RecordDetail record={selected} onClose={() => setSelectedSlug(null)} /> : <div className="detail-placeholder">Select a result to inspect its evidence.</div>}
+            {selected ? <RecordDetail record={selected} onClose={() => setSelectedSlug(null)} /> : <div className="detail-placeholder">Select a result.</div>}
           </aside>
         </section>
 
@@ -254,10 +255,9 @@ function FilterCheck({ checked, label, count, onChange }: { checked: boolean; la
 function RecordDetail({ record, onClose }: { record: MathRecord; onClose: () => void }) {
   return (
     <div className="detail-inner">
-      <div className="detail-topline"><span>Evidence record</span><button className="icon-button" onClick={onClose} aria-label="Close detail"><X size={17} /></button></div>
+      <div className="detail-topline"><span>Record</span><button className="icon-button" onClick={onClose} aria-label="Close detail"><X size={17} /></button></div>
       <div className="detail-badges"><span className={outcomeClass(record.outcome)}>{outcomeLabels[record.outcome]}</span><span className="novelty">{noveltyLabels[record.novelty]}</span></div>
       <h2>{record.title}</h2>
-      <p className="detail-summary">{record.summary}</p>
       <dl>
         <div><dt>Date</dt><dd>{formatDate(record.eventDate)}</dd></div>
         <div><dt>Field</dt><dd>{record.domain}</dd></div>
@@ -265,10 +265,7 @@ function RecordDetail({ record, onClose }: { record: MathRecord; onClose: () => 
         <div><dt>AI system</dt><dd>{record.aiSystem}</dd></div>
         <div><dt>Evidence</dt><dd>{verificationLabels[record.verificationTier]}</dd></div>
       </dl>
-      <section className="role-block"><h3>What the AI did</h3><p>{record.aiRole}</p></section>
-      <section className="role-block"><h3>What people did</h3><p>{record.humanRole}</p></section>
-      <section className="caveat"><CircleAlert size={17} /><div><h3>Scope note</h3><p>{record.caveat}</p></div></section>
-      <section className="sources"><h3>Original evidence</h3>{record.sources.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><span><small>{source.kind.replace("-", " ")}</small>{source.title}</span><ArrowUpRight size={16} /></a>)}</section>
+      <section className="sources"><h3>Sources</h3>{record.sources.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><span><small>{source.kind.replace("-", " ")}</small>{source.title}</span><ArrowUpRight size={16} /></a>)}</section>
     </div>
   );
 }
