@@ -1,4 +1,6 @@
 import type { ExportedHandler } from "@cloudflare/workers-types";
+import scienceArtifactJson from "../public/data/science-registry.json";
+import type { ScienceRecord, ScienceRegistryResponse, ScienceRegistrySummary } from "../src/scienceTypes";
 import type { LabRef, MathRecord, RegistryResponse, SourceLink } from "../src/types";
 
 interface Env {
@@ -40,6 +42,31 @@ interface LabRow {
   kind: LabRef["kind"];
 }
 
+interface ScienceArtifact {
+  snapshot: {
+    datasets: {
+      summary: ScienceRegistrySummary[];
+      discoveries: ScienceRecord[];
+    };
+  };
+}
+
+const LEGACY_HOST = "aimathbase.sqlan.workers.dev";
+const SCIENCE_ORIGIN = "https://scienceboard.sqlan.workers.dev";
+const SCIENCE_UPDATED_AT = "2026-08-02";
+const SCIENCE_SCOPE_NOTE = "Reviewed seed census, not a systematic review or a claim of completeness.";
+
+const BOARD_DISCIPLINES: Record<string, string> = {
+  "biomedical-health": "Biomedical science",
+  astronomy: "Astronomy",
+  "chemistry-materials": "Materials and chemistry",
+  "earth-planetary": "Planetary and Earth science",
+  "archaeology-paleontology": "Archaeology and paleontology",
+  neuroscience: "Neuroscience",
+  "genomics-virology": "Genomics and virology",
+  "ecology-animal-behaviour": "Ecology and animal behaviour",
+};
+
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "cache-control": "public, max-age=60, s-maxage=300",
@@ -71,6 +98,20 @@ function mapRecord(row: RecordRow, sources: SourceLink[], labs: LabRef[]): MathR
     tags: JSON.parse(row.tags_json) as string[],
     sources,
     labs,
+  };
+}
+
+async function loadScienceRegistry(): Promise<ScienceRegistryResponse> {
+  const artifact = scienceArtifactJson as unknown as ScienceArtifact;
+  const records = artifact.snapshot?.datasets?.discoveries;
+  const summary = artifact.snapshot?.datasets?.summary?.[0];
+  if (!Array.isArray(records) || !summary) throw new Error("Science registry asset has an invalid shape");
+  return {
+    records,
+    summary,
+    total: records.length,
+    updatedAt: summary.cut_off_date || SCIENCE_UPDATED_AT,
+    scopeNote: SCIENCE_SCOPE_NOTE,
   };
 }
 
@@ -128,8 +169,32 @@ async function api(request: Request, env: Env, url: URL): Promise<Response> {
   }
 
   if (url.pathname === "/api/health") {
-    const result = await env.DB.prepare("SELECT COUNT(*) AS count FROM records").first<{ count: number }>();
-    return json({ ok: true, records: result?.count ?? 0 });
+    const [result, science] = await Promise.all([
+      env.DB.prepare("SELECT COUNT(*) AS count FROM records").first<{ count: number }>(),
+      loadScienceRegistry(),
+    ]);
+    return json({ ok: true, records: result?.count ?? 0, scienceRecords: science.total });
+  }
+
+  if (url.pathname === "/api/science" || url.pathname === "/api/science/export.json") {
+    const registry = await loadScienceRegistry();
+    const boardSlug = url.searchParams.get("board");
+    const discipline = boardSlug ? BOARD_DISCIPLINES[boardSlug] : undefined;
+    const records = discipline ? registry.records.filter((record) => record.discipline === discipline) : registry.records;
+    const payload = url.pathname.endsWith("export.json")
+      ? { records, total: records.length, updatedAt: registry.updatedAt, scopeNote: registry.scopeNote }
+      : registry;
+    const disposition: Record<string, string> = url.pathname.endsWith("export.json")
+      ? { "content-disposition": `attachment; filename="science-board-${boardSlug ?? "all"}-${registry.updatedAt}.json"` }
+      : {};
+    return json(payload, 200, disposition);
+  }
+
+  const scienceMatch = url.pathname.match(/^\/api\/science\/records\/([A-Za-z0-9-]+)$/);
+  if (scienceMatch) {
+    const registry = await loadScienceRegistry();
+    const record = registry.records.find((item) => item.id === scienceMatch[1]);
+    return record ? json(record) : json({ error: "Science record not found" }, 404);
   }
 
   if (url.pathname === "/api/meta") {
@@ -167,6 +232,11 @@ export default {
   async fetch(request, env): Promise<Response> {
     const url = new URL(request.url);
     try {
+      if (url.hostname === LEGACY_HOST && !url.pathname.startsWith("/api/")) {
+        const target = new URL("/math", SCIENCE_ORIGIN);
+        target.search = url.search;
+        return Response.redirect(target.toString(), 308);
+      }
       if (url.pathname.startsWith("/api/")) return await api(request, env, url);
       return env.ASSETS.fetch(request);
     } catch (error) {

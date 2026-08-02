@@ -190,7 +190,7 @@ function App() {
       ) : (
       <main id="top">
         <section className="hero">
-          <h1>Results</h1>
+          <h1>Mathematics proved with AI</h1>
           <div className="search-row">
             <label className="search-box">
               <Search size={20} aria-hidden="true" />

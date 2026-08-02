@@ -1,5 +1,5 @@
 {
-  "name": "aimathbase",
+  "name": "scienceboard",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,13 +10,15 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "test": "vitest run",
-    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm cf:deploy:dry",
+    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm cf:deploy:dry && pnpm cf:deploy:legacy:dry",
     "db:migrate:local": "wrangler d1 migrations apply aimathbase --local",
     "db:migrate:remote": "wrangler d1 migrations apply aimathbase --remote",
     "cf:types": "wrangler types",
     "cf:dev": "wrangler dev",
     "cf:deploy:dry": "wrangler deploy --dry-run",
-    "cf:deploy": "wrangler deploy"
+    "cf:deploy": "wrangler deploy",
+    "cf:deploy:legacy:dry": "wrangler deploy --dry-run --config wrangler.legacy.jsonc",
+    "cf:deploy:legacy": "wrangler deploy --config wrangler.legacy.jsonc"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
